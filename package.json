@@ -1,0 +1,47 @@
+{
+  "name": "stream-client-node",
+  "version": "0.0.1",
+  "description": "Node.js client for Cryptowatch websocket api",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest",
+    "build": "node_modules/typescript/bin/tsc -p tsconfig.build.json",
+    "dist": "node_modules/typescript/bin/tsc -p tsconfig.dist.json"
+  },
+  "dependencies": {
+    "@types/big.js": "^4.0.5",
+    "@types/long": "^4.0.0",
+    "@types/node": "^10.5.2",
+    "@types/ws": "^5.1.2",
+    "big.js": "^5.1.2",
+    "long": "^4.0.0",
+    "pjson": "^1.0.9",
+    "protobufjs": "^6.8.6"
+  },
+  "devDependencies": {
+    "@types/jest": "^23.1.6",
+    "in-series": "0.0.4",
+    "jest": "^23.4.1",
+    "ts-jest": "^23.0.0",
+    "typescript": "^2.9.2"
+  },
+  "jest": {
+    "transform": {
+      "^.+\\.tsx?$": "ts-jest"
+    },
+    "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(jsx?|tsx?)$",
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js",
+      "jsx",
+      "json",
+      "node"
+    ],
+    "globals": {
+      "ts-jest": {
+        "tsConfigFile": "tsconfig.build.json"
+      }
+    }
+  }
+}
