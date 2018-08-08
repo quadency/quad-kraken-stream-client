@@ -71,10 +71,10 @@ class CWStreamClient extends events_1.EventEmitter {
     constructor(opts) {
         super();
         if (process.env.CW_API_KEY) {
-            defaultOptions.apiKey = process.env.CW_API_KEY;
+            opts.apiKey = process.env.CW_API_KEY;
         }
         if (process.env.CW_SECRET_KEY) {
-            defaultOptions.secretKey = process.env.CW_SECRET_KEY;
+            opts.secretKey = process.env.CW_SECRET_KEY;
         }
         this.session = Object.assign(defaultOptions, opts);
         if (this.session.apiKey.length === 0) {
