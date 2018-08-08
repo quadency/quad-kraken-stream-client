@@ -1,4 +1,4 @@
-const { CWStreamClient, STATE, EVENT, ERROR } = require("../dist/client");
+const { CWStreamClient, STATE, EVENT, ERROR } = require("../");
 
 // STATE, EVENT, and ERROR contain all the possible listeners, while
 // CWStreamClient manages the stream connection

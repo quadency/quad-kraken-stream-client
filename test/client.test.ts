@@ -62,7 +62,7 @@ test("token generation", () => {
 });
 
 test("connect to stream", done => {
-  expect.assertions(11);
+  expect.assertions(12);
   const subscriptions = ["markets:*:summary"];
 
   // Mocked stream server
@@ -77,6 +77,9 @@ test("connect to stream", done => {
       expect(msg.apiAuthentication.nonce).toBe(TEST_OPTS.nonce);
       expect(msg.apiAuthentication.token).toBe(VALID_TOKEN);
       expect(msg.apiAuthentication.apiKey).toBe(TEST_OPTS.apiKey);
+      expect(msg.apiAuthentication.source).toBe(
+        ProtobufClient.APIAuthenticationMessage.Source.NODE_SDK
+      );
 
       ws.send(
         StreamMessage.encode(

@@ -7,12 +7,11 @@ Please [click here](https://docs.google.com/forms/d/e/1FAIpQLSdhv_ceVtKA0qQcW6zQ
 to inquire about getting access to it.
 
 ## Install
-TODO: npm module
 ```
-make
+npm i cw-stream-client --save
 ```
 
-## Example
+## Usage
 The following code connects to the stream api and listens for market and pair data for `btc:usd`.
 ```javascript
 const { CWStreamClient, STATE, EVENT, ERROR } = require("cw-stream-client");

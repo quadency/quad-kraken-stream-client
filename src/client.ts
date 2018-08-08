@@ -264,9 +264,7 @@ export class CWStreamClient extends EventEmitter {
       apiAuthentication: APIAuthenticationMessage.create({
         apiKey: this.session.apiKey,
         nonce,
-        // TODO this should be NODE_SDK, and JAVASCRIPT_SDK if transpiled for
-        // browser
-        source: ProtobufClient.APIAuthenticationMessage.Source.JAVASCRIPT_SDK,
+        source: ProtobufClient.APIAuthenticationMessage.Source.NODE_SDK,
         subscriptions: this.session.subscriptions,
         token,
         version: pjson.version

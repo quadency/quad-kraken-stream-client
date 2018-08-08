@@ -1,8 +1,12 @@
 {
-  "name": "stream-client-node",
+  "name": "cw-stream-client",
   "version": "0.0.1",
-  "description": "Node.js client for Cryptowatch websocket api",
-  "main": "index.js",
+  "description":
+    "A library for managing connections to Cryptowatch Websocket Streaming API",
+  "author": "Cryptowatch <infra@cryptowatch>",
+  "homepage": "https://cryptowat.ch/docs/streaming-api",
+  "license": "BSD-2-Clause-FreeBSD",
+  "main": "dist/client.js",
   "scripts": {
     "test": "jest",
     "build": "node_modules/typescript/bin/tsc -p tsconfig.build.json",
@@ -30,14 +34,7 @@
       "^.+\\.tsx?$": "ts-jest"
     },
     "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(jsx?|tsx?)$",
-    "moduleFileExtensions": [
-      "ts",
-      "tsx",
-      "js",
-      "jsx",
-      "json",
-      "node"
-    ],
+    "moduleFileExtensions": ["ts", "tsx", "js", "jsx", "json", "node"],
     "globals": {
       "ts-jest": {
         "tsConfigFile": "tsconfig.build.json"

@@ -472,7 +472,8 @@ export namespace ProtobufClient {
         enum Source {
             UNKNOWN = 0,
             GOLANG_SDK = 1,
-            JAVASCRIPT_SDK = 2
+            JAVASCRIPT_SDK = 2,
+            NODE_SDK = 3
         }
     }
 

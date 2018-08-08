@@ -1154,6 +1154,7 @@ $root.ProtobufClient = (function() {
                 case 0:
                 case 1:
                 case 2:
+                case 3:
                     break;
                 }
             if (message.version != null && message.hasOwnProperty("version"))
@@ -1199,6 +1200,10 @@ $root.ProtobufClient = (function() {
             case "JAVASCRIPT_SDK":
             case 2:
                 message.source = 2;
+                break;
+            case "NODE_SDK":
+            case 3:
+                message.source = 3;
                 break;
             }
             if (object.version != null)
@@ -1271,12 +1276,14 @@ $root.ProtobufClient = (function() {
          * @property {number} UNKNOWN=0 UNKNOWN value
          * @property {number} GOLANG_SDK=1 GOLANG_SDK value
          * @property {number} JAVASCRIPT_SDK=2 JAVASCRIPT_SDK value
+         * @property {number} NODE_SDK=3 NODE_SDK value
          */
         APIAuthenticationMessage.Source = (function() {
             var valuesById = {}, values = Object.create(valuesById);
             values[valuesById[0] = "UNKNOWN"] = 0;
             values[valuesById[1] = "GOLANG_SDK"] = 1;
             values[valuesById[2] = "JAVASCRIPT_SDK"] = 2;
+            values[valuesById[3] = "NODE_SDK"] = 3;
             return values;
         })();
 
