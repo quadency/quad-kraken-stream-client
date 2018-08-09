@@ -9,9 +9,9 @@ dist: proto_ts_definitions
 .PHONY: proto_ts_definitions
 proto_ts_definitions: node_modules
 	./node_modules/protobufjs/bin/pbjs -t static-module -w commonjs -o modules/proto/index.js \
-	../proto/{client,markets,stream}/*.proto
+	proto/{client,markets,stream}/*.proto
 	./node_modules/protobufjs/bin/pbjs \
-		-t static-module ../proto/{client,markets,stream}/*.proto \
+		-t static-module proto/{client,markets,stream}/*.proto \
 		| ./node_modules/protobufjs/bin/pbts -o proto.d.ts -
 	# disbale tslint in here because pbts tool complains; it works fine though
 	echo "/* tslint:disable */" > modules/proto/index.d.ts

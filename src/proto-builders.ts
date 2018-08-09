@@ -2,7 +2,7 @@ import * as path from "path";
 import { loadSync } from "protobufjs";
 
 const protoPath = (dir, file) =>
-  path.resolve(path.join(__dirname, "..", "..", "proto", dir, `${file}.proto`));
+  path.resolve(path.join(__dirname, "..", "proto", dir, `${file}.proto`));
 
 // ProtobufClient
 const root = loadSync(protoPath("client", "client"));
