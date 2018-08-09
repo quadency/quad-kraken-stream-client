@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const path = require("path");
 const protobufjs_1 = require("protobufjs");
-const protoPath = (dir, file) => path.resolve(path.join(__dirname, "..", "..", "proto", dir, `${file}.proto`));
+const protoPath = (dir, file) => path.resolve(path.join(__dirname, "..", "proto", dir, `${file}.proto`));
 // ProtobufClient
 const root = protobufjs_1.loadSync(protoPath("client", "client"));
 const ProtobufClient = root.lookup("ProtobufClient");
