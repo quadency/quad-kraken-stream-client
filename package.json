@@ -4,6 +4,10 @@
   "description": "A library for managing connections to Cryptowatch Websocket Streaming API",
   "author": "Cryptowatch <infra@cryptowatch>",
   "homepage": "https://cryptowat.ch/docs/streaming-api",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/cryptowatch/stream-client-node.git"
+  },
   "license": "BSD-2-Clause-FreeBSD",
   "main": "dist/client.js",
   "files": "proto/*",
@@ -28,7 +32,8 @@
     "in-series": "0.0.4",
     "jest": "^23.4.1",
     "ts-jest": "^23.0.0",
-    "typescript": "^2.9.2"
+    "typescript": "^2.9.2",
+    "yarn": "^1.9.4"
   },
   "jest": {
     "transform": {

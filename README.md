@@ -80,7 +80,7 @@ The following object contains the default connection settings. Any of these can 
 ```javascript
 const defaultOptions = {
   // The stream url to connect to.
-  url: "wss://sb.cryptowat.ch",
+  url: "wss://stream.cryptowat.ch",
 
   // apiKey and secretKey are both Required. Obtain from https://cryptowat.ch/account/stream-api
   // Environment variables CW_API_KEY and CW_SECRET_KEY take precedence over these settings.

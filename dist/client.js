@@ -43,7 +43,7 @@ var ERROR;
 })(ERROR = exports.ERROR || (exports.ERROR = {}));
 // These will be overwritten by the opts object passed to the constructor
 const defaultOptions = {
-    url: "wss://sb.cryptowat.ch",
+    url: "wss://stream.cryptowat.ch",
     // apiKey and secretKey are both Required. Obtain from https://cryptowat.ch/account/stream-api
     // These defaults will be overwritten by environment variables CW_API_KEY and CW_SECRET_KEY,
     // and environment variables will be overwritten by settings passed to the constructor.

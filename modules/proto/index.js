@@ -1,4 +1,4 @@
-/*eslint-disable block-scoped-var, no-redeclare, no-control-regex, no-prototype-builtins*/
+/*eslint-disable block-scoped-var, id-length, no-control-regex, no-magic-numbers, no-prototype-builtins, no-redeclare, no-shadow, no-var, sort-vars*/
 "use strict";
 
 var $protobuf = require("protobufjs/minimal");
@@ -3454,11 +3454,11 @@ $root.ProtobufMarkets = (function() {
          * @property {ProtobufMarkets.IMarket|null} [market] MarketUpdateMessage market
          * @property {ProtobufMarkets.IOrderBookUpdate|null} [orderBookUpdate] MarketUpdateMessage orderBookUpdate
          * @property {ProtobufMarkets.IOrderBookDeltaUpdate|null} [orderBookDeltaUpdate] MarketUpdateMessage orderBookDeltaUpdate
+         * @property {ProtobufMarkets.IOrderBookSpreadUpdate|null} [orderBookSpreadUpdate] MarketUpdateMessage orderBookSpreadUpdate
          * @property {ProtobufMarkets.ITradesUpdate|null} [tradesUpdate] MarketUpdateMessage tradesUpdate
          * @property {ProtobufMarkets.IIntervalsUpdate|null} [intervalsUpdate] MarketUpdateMessage intervalsUpdate
          * @property {ProtobufMarkets.ISummaryUpdate|null} [summaryUpdate] MarketUpdateMessage summaryUpdate
          * @property {ProtobufMarkets.ISparklineUpdate|null} [sparklineUpdate] MarketUpdateMessage sparklineUpdate
-         * @property {ProtobufMarkets.ISpreadHistoryUpdate|null} [spreadHistoryUpdate] MarketUpdateMessage spreadHistoryUpdate
          */
 
         /**
@@ -3501,6 +3501,14 @@ $root.ProtobufMarkets = (function() {
         MarketUpdateMessage.prototype.orderBookDeltaUpdate = null;
 
         /**
+         * MarketUpdateMessage orderBookSpreadUpdate.
+         * @member {ProtobufMarkets.IOrderBookSpreadUpdate|null|undefined} orderBookSpreadUpdate
+         * @memberof ProtobufMarkets.MarketUpdateMessage
+         * @instance
+         */
+        MarketUpdateMessage.prototype.orderBookSpreadUpdate = null;
+
+        /**
          * MarketUpdateMessage tradesUpdate.
          * @member {ProtobufMarkets.ITradesUpdate|null|undefined} tradesUpdate
          * @memberof ProtobufMarkets.MarketUpdateMessage
@@ -3532,25 +3540,17 @@ $root.ProtobufMarkets = (function() {
          */
         MarketUpdateMessage.prototype.sparklineUpdate = null;
 
-        /**
-         * MarketUpdateMessage spreadHistoryUpdate.
-         * @member {ProtobufMarkets.ISpreadHistoryUpdate|null|undefined} spreadHistoryUpdate
-         * @memberof ProtobufMarkets.MarketUpdateMessage
-         * @instance
-         */
-        MarketUpdateMessage.prototype.spreadHistoryUpdate = null;
-
         // OneOf field names bound to virtual getters and setters
         var $oneOfFields;
 
         /**
          * MarketUpdateMessage Update.
-         * @member {"orderBookUpdate"|"orderBookDeltaUpdate"|"tradesUpdate"|"intervalsUpdate"|"summaryUpdate"|"sparklineUpdate"|"spreadHistoryUpdate"|undefined} Update
+         * @member {"orderBookUpdate"|"orderBookDeltaUpdate"|"orderBookSpreadUpdate"|"tradesUpdate"|"intervalsUpdate"|"summaryUpdate"|"sparklineUpdate"|undefined} Update
          * @memberof ProtobufMarkets.MarketUpdateMessage
          * @instance
          */
         Object.defineProperty(MarketUpdateMessage.prototype, "Update", {
-            get: $util.oneOfGetter($oneOfFields = ["orderBookUpdate", "orderBookDeltaUpdate", "tradesUpdate", "intervalsUpdate", "summaryUpdate", "sparklineUpdate", "spreadHistoryUpdate"]),
+            get: $util.oneOfGetter($oneOfFields = ["orderBookUpdate", "orderBookDeltaUpdate", "orderBookSpreadUpdate", "tradesUpdate", "intervalsUpdate", "summaryUpdate", "sparklineUpdate"]),
             set: $util.oneOfSetter($oneOfFields)
         });
 
@@ -3592,8 +3592,8 @@ $root.ProtobufMarkets = (function() {
                 $root.ProtobufMarkets.SparklineUpdate.encode(message.sparklineUpdate, writer.uint32(/* id 7, wireType 2 =*/58).fork()).ldelim();
             if (message.market != null && message.hasOwnProperty("market"))
                 $root.ProtobufMarkets.Market.encode(message.market, writer.uint32(/* id 9, wireType 2 =*/74).fork()).ldelim();
-            if (message.spreadHistoryUpdate != null && message.hasOwnProperty("spreadHistoryUpdate"))
-                $root.ProtobufMarkets.SpreadHistoryUpdate.encode(message.spreadHistoryUpdate, writer.uint32(/* id 10, wireType 2 =*/82).fork()).ldelim();
+            if (message.orderBookSpreadUpdate != null && message.hasOwnProperty("orderBookSpreadUpdate"))
+                $root.ProtobufMarkets.OrderBookSpreadUpdate.encode(message.orderBookSpreadUpdate, writer.uint32(/* id 11, wireType 2 =*/90).fork()).ldelim();
             return writer;
         };
 
@@ -3637,6 +3637,9 @@ $root.ProtobufMarkets = (function() {
                 case 3:
                     message.orderBookDeltaUpdate = $root.ProtobufMarkets.OrderBookDeltaUpdate.decode(reader, reader.uint32());
                     break;
+                case 11:
+                    message.orderBookSpreadUpdate = $root.ProtobufMarkets.OrderBookSpreadUpdate.decode(reader, reader.uint32());
+                    break;
                 case 4:
                     message.tradesUpdate = $root.ProtobufMarkets.TradesUpdate.decode(reader, reader.uint32());
                     break;
@@ -3648,9 +3651,6 @@ $root.ProtobufMarkets = (function() {
                     break;
                 case 7:
                     message.sparklineUpdate = $root.ProtobufMarkets.SparklineUpdate.decode(reader, reader.uint32());
-                    break;
-                case 10:
-                    message.spreadHistoryUpdate = $root.ProtobufMarkets.SpreadHistoryUpdate.decode(reader, reader.uint32());
                     break;
                 default:
                     reader.skipType(tag & 7);
@@ -3711,6 +3711,16 @@ $root.ProtobufMarkets = (function() {
                         return "orderBookDeltaUpdate." + error;
                 }
             }
+            if (message.orderBookSpreadUpdate != null && message.hasOwnProperty("orderBookSpreadUpdate")) {
+                if (properties.Update === 1)
+                    return "Update: multiple values";
+                properties.Update = 1;
+                {
+                    var error = $root.ProtobufMarkets.OrderBookSpreadUpdate.verify(message.orderBookSpreadUpdate);
+                    if (error)
+                        return "orderBookSpreadUpdate." + error;
+                }
+            }
             if (message.tradesUpdate != null && message.hasOwnProperty("tradesUpdate")) {
                 if (properties.Update === 1)
                     return "Update: multiple values";
@@ -3751,16 +3761,6 @@ $root.ProtobufMarkets = (function() {
                         return "sparklineUpdate." + error;
                 }
             }
-            if (message.spreadHistoryUpdate != null && message.hasOwnProperty("spreadHistoryUpdate")) {
-                if (properties.Update === 1)
-                    return "Update: multiple values";
-                properties.Update = 1;
-                {
-                    var error = $root.ProtobufMarkets.SpreadHistoryUpdate.verify(message.spreadHistoryUpdate);
-                    if (error)
-                        return "spreadHistoryUpdate." + error;
-                }
-            }
             return null;
         };
 
@@ -3791,6 +3791,11 @@ $root.ProtobufMarkets = (function() {
                     throw TypeError(".ProtobufMarkets.MarketUpdateMessage.orderBookDeltaUpdate: object expected");
                 message.orderBookDeltaUpdate = $root.ProtobufMarkets.OrderBookDeltaUpdate.fromObject(object.orderBookDeltaUpdate);
             }
+            if (object.orderBookSpreadUpdate != null) {
+                if (typeof object.orderBookSpreadUpdate !== "object")
+                    throw TypeError(".ProtobufMarkets.MarketUpdateMessage.orderBookSpreadUpdate: object expected");
+                message.orderBookSpreadUpdate = $root.ProtobufMarkets.OrderBookSpreadUpdate.fromObject(object.orderBookSpreadUpdate);
+            }
             if (object.tradesUpdate != null) {
                 if (typeof object.tradesUpdate !== "object")
                     throw TypeError(".ProtobufMarkets.MarketUpdateMessage.tradesUpdate: object expected");
@@ -3810,11 +3815,6 @@ $root.ProtobufMarkets = (function() {
                 if (typeof object.sparklineUpdate !== "object")
                     throw TypeError(".ProtobufMarkets.MarketUpdateMessage.sparklineUpdate: object expected");
                 message.sparklineUpdate = $root.ProtobufMarkets.SparklineUpdate.fromObject(object.sparklineUpdate);
-            }
-            if (object.spreadHistoryUpdate != null) {
-                if (typeof object.spreadHistoryUpdate !== "object")
-                    throw TypeError(".ProtobufMarkets.MarketUpdateMessage.spreadHistoryUpdate: object expected");
-                message.spreadHistoryUpdate = $root.ProtobufMarkets.SpreadHistoryUpdate.fromObject(object.spreadHistoryUpdate);
             }
             return message;
         };
@@ -3866,10 +3866,10 @@ $root.ProtobufMarkets = (function() {
             }
             if (message.market != null && message.hasOwnProperty("market"))
                 object.market = $root.ProtobufMarkets.Market.toObject(message.market, options);
-            if (message.spreadHistoryUpdate != null && message.hasOwnProperty("spreadHistoryUpdate")) {
-                object.spreadHistoryUpdate = $root.ProtobufMarkets.SpreadHistoryUpdate.toObject(message.spreadHistoryUpdate, options);
+            if (message.orderBookSpreadUpdate != null && message.hasOwnProperty("orderBookSpreadUpdate")) {
+                object.orderBookSpreadUpdate = $root.ProtobufMarkets.OrderBookSpreadUpdate.toObject(message.orderBookSpreadUpdate, options);
                 if (options.oneofs)
-                    object.Update = "spreadHistoryUpdate";
+                    object.Update = "orderBookSpreadUpdate";
             }
             return object;
         };
@@ -4825,6 +4825,262 @@ $root.ProtobufMarkets = (function() {
         })();
 
         return OrderBookDeltaUpdate;
+    })();
+
+    ProtobufMarkets.OrderBookSpreadUpdate = (function() {
+
+        /**
+         * Properties of an OrderBookSpreadUpdate.
+         * @memberof ProtobufMarkets
+         * @interface IOrderBookSpreadUpdate
+         * @property {number|Long|null} [timestamp] OrderBookSpreadUpdate timestamp
+         * @property {ProtobufMarkets.IOrder|null} [bid] OrderBookSpreadUpdate bid
+         * @property {ProtobufMarkets.IOrder|null} [ask] OrderBookSpreadUpdate ask
+         */
+
+        /**
+         * Constructs a new OrderBookSpreadUpdate.
+         * @memberof ProtobufMarkets
+         * @classdesc Represents an OrderBookSpreadUpdate.
+         * @implements IOrderBookSpreadUpdate
+         * @constructor
+         * @param {ProtobufMarkets.IOrderBookSpreadUpdate=} [properties] Properties to set
+         */
+        function OrderBookSpreadUpdate(properties) {
+            if (properties)
+                for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                    if (properties[keys[i]] != null)
+                        this[keys[i]] = properties[keys[i]];
+        }
+
+        /**
+         * OrderBookSpreadUpdate timestamp.
+         * @member {number|Long} timestamp
+         * @memberof ProtobufMarkets.OrderBookSpreadUpdate
+         * @instance
+         */
+        OrderBookSpreadUpdate.prototype.timestamp = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+        /**
+         * OrderBookSpreadUpdate bid.
+         * @member {ProtobufMarkets.IOrder|null|undefined} bid
+         * @memberof ProtobufMarkets.OrderBookSpreadUpdate
+         * @instance
+         */
+        OrderBookSpreadUpdate.prototype.bid = null;
+
+        /**
+         * OrderBookSpreadUpdate ask.
+         * @member {ProtobufMarkets.IOrder|null|undefined} ask
+         * @memberof ProtobufMarkets.OrderBookSpreadUpdate
+         * @instance
+         */
+        OrderBookSpreadUpdate.prototype.ask = null;
+
+        /**
+         * Creates a new OrderBookSpreadUpdate instance using the specified properties.
+         * @function create
+         * @memberof ProtobufMarkets.OrderBookSpreadUpdate
+         * @static
+         * @param {ProtobufMarkets.IOrderBookSpreadUpdate=} [properties] Properties to set
+         * @returns {ProtobufMarkets.OrderBookSpreadUpdate} OrderBookSpreadUpdate instance
+         */
+        OrderBookSpreadUpdate.create = function create(properties) {
+            return new OrderBookSpreadUpdate(properties);
+        };
+
+        /**
+         * Encodes the specified OrderBookSpreadUpdate message. Does not implicitly {@link ProtobufMarkets.OrderBookSpreadUpdate.verify|verify} messages.
+         * @function encode
+         * @memberof ProtobufMarkets.OrderBookSpreadUpdate
+         * @static
+         * @param {ProtobufMarkets.IOrderBookSpreadUpdate} message OrderBookSpreadUpdate message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+        OrderBookSpreadUpdate.encode = function encode(message, writer) {
+            if (!writer)
+                writer = $Writer.create();
+            if (message.timestamp != null && message.hasOwnProperty("timestamp"))
+                writer.uint32(/* id 1, wireType 0 =*/8).int64(message.timestamp);
+            if (message.bid != null && message.hasOwnProperty("bid"))
+                $root.ProtobufMarkets.Order.encode(message.bid, writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
+            if (message.ask != null && message.hasOwnProperty("ask"))
+                $root.ProtobufMarkets.Order.encode(message.ask, writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
+            return writer;
+        };
+
+        /**
+         * Encodes the specified OrderBookSpreadUpdate message, length delimited. Does not implicitly {@link ProtobufMarkets.OrderBookSpreadUpdate.verify|verify} messages.
+         * @function encodeDelimited
+         * @memberof ProtobufMarkets.OrderBookSpreadUpdate
+         * @static
+         * @param {ProtobufMarkets.IOrderBookSpreadUpdate} message OrderBookSpreadUpdate message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+        OrderBookSpreadUpdate.encodeDelimited = function encodeDelimited(message, writer) {
+            return this.encode(message, writer).ldelim();
+        };
+
+        /**
+         * Decodes an OrderBookSpreadUpdate message from the specified reader or buffer.
+         * @function decode
+         * @memberof ProtobufMarkets.OrderBookSpreadUpdate
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @param {number} [length] Message length if known beforehand
+         * @returns {ProtobufMarkets.OrderBookSpreadUpdate} OrderBookSpreadUpdate
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        OrderBookSpreadUpdate.decode = function decode(reader, length) {
+            if (!(reader instanceof $Reader))
+                reader = $Reader.create(reader);
+            var end = length === undefined ? reader.len : reader.pos + length, message = new $root.ProtobufMarkets.OrderBookSpreadUpdate();
+            while (reader.pos < end) {
+                var tag = reader.uint32();
+                switch (tag >>> 3) {
+                case 1:
+                    message.timestamp = reader.int64();
+                    break;
+                case 2:
+                    message.bid = $root.ProtobufMarkets.Order.decode(reader, reader.uint32());
+                    break;
+                case 3:
+                    message.ask = $root.ProtobufMarkets.Order.decode(reader, reader.uint32());
+                    break;
+                default:
+                    reader.skipType(tag & 7);
+                    break;
+                }
+            }
+            return message;
+        };
+
+        /**
+         * Decodes an OrderBookSpreadUpdate message from the specified reader or buffer, length delimited.
+         * @function decodeDelimited
+         * @memberof ProtobufMarkets.OrderBookSpreadUpdate
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @returns {ProtobufMarkets.OrderBookSpreadUpdate} OrderBookSpreadUpdate
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        OrderBookSpreadUpdate.decodeDelimited = function decodeDelimited(reader) {
+            if (!(reader instanceof $Reader))
+                reader = new $Reader(reader);
+            return this.decode(reader, reader.uint32());
+        };
+
+        /**
+         * Verifies an OrderBookSpreadUpdate message.
+         * @function verify
+         * @memberof ProtobufMarkets.OrderBookSpreadUpdate
+         * @static
+         * @param {Object.<string,*>} message Plain object to verify
+         * @returns {string|null} `null` if valid, otherwise the reason why it is not
+         */
+        OrderBookSpreadUpdate.verify = function verify(message) {
+            if (typeof message !== "object" || message === null)
+                return "object expected";
+            if (message.timestamp != null && message.hasOwnProperty("timestamp"))
+                if (!$util.isInteger(message.timestamp) && !(message.timestamp && $util.isInteger(message.timestamp.low) && $util.isInteger(message.timestamp.high)))
+                    return "timestamp: integer|Long expected";
+            if (message.bid != null && message.hasOwnProperty("bid")) {
+                var error = $root.ProtobufMarkets.Order.verify(message.bid);
+                if (error)
+                    return "bid." + error;
+            }
+            if (message.ask != null && message.hasOwnProperty("ask")) {
+                var error = $root.ProtobufMarkets.Order.verify(message.ask);
+                if (error)
+                    return "ask." + error;
+            }
+            return null;
+        };
+
+        /**
+         * Creates an OrderBookSpreadUpdate message from a plain object. Also converts values to their respective internal types.
+         * @function fromObject
+         * @memberof ProtobufMarkets.OrderBookSpreadUpdate
+         * @static
+         * @param {Object.<string,*>} object Plain object
+         * @returns {ProtobufMarkets.OrderBookSpreadUpdate} OrderBookSpreadUpdate
+         */
+        OrderBookSpreadUpdate.fromObject = function fromObject(object) {
+            if (object instanceof $root.ProtobufMarkets.OrderBookSpreadUpdate)
+                return object;
+            var message = new $root.ProtobufMarkets.OrderBookSpreadUpdate();
+            if (object.timestamp != null)
+                if ($util.Long)
+                    (message.timestamp = $util.Long.fromValue(object.timestamp)).unsigned = false;
+                else if (typeof object.timestamp === "string")
+                    message.timestamp = parseInt(object.timestamp, 10);
+                else if (typeof object.timestamp === "number")
+                    message.timestamp = object.timestamp;
+                else if (typeof object.timestamp === "object")
+                    message.timestamp = new $util.LongBits(object.timestamp.low >>> 0, object.timestamp.high >>> 0).toNumber();
+            if (object.bid != null) {
+                if (typeof object.bid !== "object")
+                    throw TypeError(".ProtobufMarkets.OrderBookSpreadUpdate.bid: object expected");
+                message.bid = $root.ProtobufMarkets.Order.fromObject(object.bid);
+            }
+            if (object.ask != null) {
+                if (typeof object.ask !== "object")
+                    throw TypeError(".ProtobufMarkets.OrderBookSpreadUpdate.ask: object expected");
+                message.ask = $root.ProtobufMarkets.Order.fromObject(object.ask);
+            }
+            return message;
+        };
+
+        /**
+         * Creates a plain object from an OrderBookSpreadUpdate message. Also converts values to other types if specified.
+         * @function toObject
+         * @memberof ProtobufMarkets.OrderBookSpreadUpdate
+         * @static
+         * @param {ProtobufMarkets.OrderBookSpreadUpdate} message OrderBookSpreadUpdate
+         * @param {$protobuf.IConversionOptions} [options] Conversion options
+         * @returns {Object.<string,*>} Plain object
+         */
+        OrderBookSpreadUpdate.toObject = function toObject(message, options) {
+            if (!options)
+                options = {};
+            var object = {};
+            if (options.defaults) {
+                if ($util.Long) {
+                    var long = new $util.Long(0, 0, false);
+                    object.timestamp = options.longs === String ? long.toString() : options.longs === Number ? long.toNumber() : long;
+                } else
+                    object.timestamp = options.longs === String ? "0" : 0;
+                object.bid = null;
+                object.ask = null;
+            }
+            if (message.timestamp != null && message.hasOwnProperty("timestamp"))
+                if (typeof message.timestamp === "number")
+                    object.timestamp = options.longs === String ? String(message.timestamp) : message.timestamp;
+                else
+                    object.timestamp = options.longs === String ? $util.Long.prototype.toString.call(message.timestamp) : options.longs === Number ? new $util.LongBits(message.timestamp.low >>> 0, message.timestamp.high >>> 0).toNumber() : message.timestamp;
+            if (message.bid != null && message.hasOwnProperty("bid"))
+                object.bid = $root.ProtobufMarkets.Order.toObject(message.bid, options);
+            if (message.ask != null && message.hasOwnProperty("ask"))
+                object.ask = $root.ProtobufMarkets.Order.toObject(message.ask, options);
+            return object;
+        };
+
+        /**
+         * Converts this OrderBookSpreadUpdate to JSON.
+         * @function toJSON
+         * @memberof ProtobufMarkets.OrderBookSpreadUpdate
+         * @instance
+         * @returns {Object.<string,*>} JSON object
+         */
+        OrderBookSpreadUpdate.prototype.toJSON = function toJSON() {
+            return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+        };
+
+        return OrderBookSpreadUpdate;
     })();
 
     ProtobufMarkets.TradesUpdate = (function() {
@@ -6664,640 +6920,6 @@ $root.ProtobufMarkets = (function() {
         };
 
         return SparklineUpdate;
-    })();
-
-    ProtobufMarkets.SpreadHistoryUpdate = (function() {
-
-        /**
-         * Properties of a SpreadHistoryUpdate.
-         * @memberof ProtobufMarkets
-         * @interface ISpreadHistoryUpdate
-         * @property {Array.<ProtobufMarkets.SpreadHistoryUpdate.ISpreadHistoryPoint>|null} [asks] SpreadHistoryUpdate asks
-         * @property {Array.<ProtobufMarkets.SpreadHistoryUpdate.ISpreadHistoryPoint>|null} [bids] SpreadHistoryUpdate bids
-         * @property {number|Long|null} [timestamp] SpreadHistoryUpdate timestamp
-         * @property {ProtobufMarkets.IOrder|null} [bid] SpreadHistoryUpdate bid
-         * @property {ProtobufMarkets.IOrder|null} [ask] SpreadHistoryUpdate ask
-         */
-
-        /**
-         * Constructs a new SpreadHistoryUpdate.
-         * @memberof ProtobufMarkets
-         * @classdesc Represents a SpreadHistoryUpdate.
-         * @implements ISpreadHistoryUpdate
-         * @constructor
-         * @param {ProtobufMarkets.ISpreadHistoryUpdate=} [properties] Properties to set
-         */
-        function SpreadHistoryUpdate(properties) {
-            this.asks = [];
-            this.bids = [];
-            if (properties)
-                for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                    if (properties[keys[i]] != null)
-                        this[keys[i]] = properties[keys[i]];
-        }
-
-        /**
-         * SpreadHistoryUpdate asks.
-         * @member {Array.<ProtobufMarkets.SpreadHistoryUpdate.ISpreadHistoryPoint>} asks
-         * @memberof ProtobufMarkets.SpreadHistoryUpdate
-         * @instance
-         */
-        SpreadHistoryUpdate.prototype.asks = $util.emptyArray;
-
-        /**
-         * SpreadHistoryUpdate bids.
-         * @member {Array.<ProtobufMarkets.SpreadHistoryUpdate.ISpreadHistoryPoint>} bids
-         * @memberof ProtobufMarkets.SpreadHistoryUpdate
-         * @instance
-         */
-        SpreadHistoryUpdate.prototype.bids = $util.emptyArray;
-
-        /**
-         * SpreadHistoryUpdate timestamp.
-         * @member {number|Long} timestamp
-         * @memberof ProtobufMarkets.SpreadHistoryUpdate
-         * @instance
-         */
-        SpreadHistoryUpdate.prototype.timestamp = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
-
-        /**
-         * SpreadHistoryUpdate bid.
-         * @member {ProtobufMarkets.IOrder|null|undefined} bid
-         * @memberof ProtobufMarkets.SpreadHistoryUpdate
-         * @instance
-         */
-        SpreadHistoryUpdate.prototype.bid = null;
-
-        /**
-         * SpreadHistoryUpdate ask.
-         * @member {ProtobufMarkets.IOrder|null|undefined} ask
-         * @memberof ProtobufMarkets.SpreadHistoryUpdate
-         * @instance
-         */
-        SpreadHistoryUpdate.prototype.ask = null;
-
-        /**
-         * Creates a new SpreadHistoryUpdate instance using the specified properties.
-         * @function create
-         * @memberof ProtobufMarkets.SpreadHistoryUpdate
-         * @static
-         * @param {ProtobufMarkets.ISpreadHistoryUpdate=} [properties] Properties to set
-         * @returns {ProtobufMarkets.SpreadHistoryUpdate} SpreadHistoryUpdate instance
-         */
-        SpreadHistoryUpdate.create = function create(properties) {
-            return new SpreadHistoryUpdate(properties);
-        };
-
-        /**
-         * Encodes the specified SpreadHistoryUpdate message. Does not implicitly {@link ProtobufMarkets.SpreadHistoryUpdate.verify|verify} messages.
-         * @function encode
-         * @memberof ProtobufMarkets.SpreadHistoryUpdate
-         * @static
-         * @param {ProtobufMarkets.ISpreadHistoryUpdate} message SpreadHistoryUpdate message or plain object to encode
-         * @param {$protobuf.Writer} [writer] Writer to encode to
-         * @returns {$protobuf.Writer} Writer
-         */
-        SpreadHistoryUpdate.encode = function encode(message, writer) {
-            if (!writer)
-                writer = $Writer.create();
-            if (message.asks != null && message.asks.length)
-                for (var i = 0; i < message.asks.length; ++i)
-                    $root.ProtobufMarkets.SpreadHistoryUpdate.SpreadHistoryPoint.encode(message.asks[i], writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
-            if (message.bids != null && message.bids.length)
-                for (var i = 0; i < message.bids.length; ++i)
-                    $root.ProtobufMarkets.SpreadHistoryUpdate.SpreadHistoryPoint.encode(message.bids[i], writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
-            if (message.timestamp != null && message.hasOwnProperty("timestamp"))
-                writer.uint32(/* id 3, wireType 0 =*/24).int64(message.timestamp);
-            if (message.bid != null && message.hasOwnProperty("bid"))
-                $root.ProtobufMarkets.Order.encode(message.bid, writer.uint32(/* id 4, wireType 2 =*/34).fork()).ldelim();
-            if (message.ask != null && message.hasOwnProperty("ask"))
-                $root.ProtobufMarkets.Order.encode(message.ask, writer.uint32(/* id 5, wireType 2 =*/42).fork()).ldelim();
-            return writer;
-        };
-
-        /**
-         * Encodes the specified SpreadHistoryUpdate message, length delimited. Does not implicitly {@link ProtobufMarkets.SpreadHistoryUpdate.verify|verify} messages.
-         * @function encodeDelimited
-         * @memberof ProtobufMarkets.SpreadHistoryUpdate
-         * @static
-         * @param {ProtobufMarkets.ISpreadHistoryUpdate} message SpreadHistoryUpdate message or plain object to encode
-         * @param {$protobuf.Writer} [writer] Writer to encode to
-         * @returns {$protobuf.Writer} Writer
-         */
-        SpreadHistoryUpdate.encodeDelimited = function encodeDelimited(message, writer) {
-            return this.encode(message, writer).ldelim();
-        };
-
-        /**
-         * Decodes a SpreadHistoryUpdate message from the specified reader or buffer.
-         * @function decode
-         * @memberof ProtobufMarkets.SpreadHistoryUpdate
-         * @static
-         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
-         * @param {number} [length] Message length if known beforehand
-         * @returns {ProtobufMarkets.SpreadHistoryUpdate} SpreadHistoryUpdate
-         * @throws {Error} If the payload is not a reader or valid buffer
-         * @throws {$protobuf.util.ProtocolError} If required fields are missing
-         */
-        SpreadHistoryUpdate.decode = function decode(reader, length) {
-            if (!(reader instanceof $Reader))
-                reader = $Reader.create(reader);
-            var end = length === undefined ? reader.len : reader.pos + length, message = new $root.ProtobufMarkets.SpreadHistoryUpdate();
-            while (reader.pos < end) {
-                var tag = reader.uint32();
-                switch (tag >>> 3) {
-                case 1:
-                    if (!(message.asks && message.asks.length))
-                        message.asks = [];
-                    message.asks.push($root.ProtobufMarkets.SpreadHistoryUpdate.SpreadHistoryPoint.decode(reader, reader.uint32()));
-                    break;
-                case 2:
-                    if (!(message.bids && message.bids.length))
-                        message.bids = [];
-                    message.bids.push($root.ProtobufMarkets.SpreadHistoryUpdate.SpreadHistoryPoint.decode(reader, reader.uint32()));
-                    break;
-                case 3:
-                    message.timestamp = reader.int64();
-                    break;
-                case 4:
-                    message.bid = $root.ProtobufMarkets.Order.decode(reader, reader.uint32());
-                    break;
-                case 5:
-                    message.ask = $root.ProtobufMarkets.Order.decode(reader, reader.uint32());
-                    break;
-                default:
-                    reader.skipType(tag & 7);
-                    break;
-                }
-            }
-            return message;
-        };
-
-        /**
-         * Decodes a SpreadHistoryUpdate message from the specified reader or buffer, length delimited.
-         * @function decodeDelimited
-         * @memberof ProtobufMarkets.SpreadHistoryUpdate
-         * @static
-         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
-         * @returns {ProtobufMarkets.SpreadHistoryUpdate} SpreadHistoryUpdate
-         * @throws {Error} If the payload is not a reader or valid buffer
-         * @throws {$protobuf.util.ProtocolError} If required fields are missing
-         */
-        SpreadHistoryUpdate.decodeDelimited = function decodeDelimited(reader) {
-            if (!(reader instanceof $Reader))
-                reader = new $Reader(reader);
-            return this.decode(reader, reader.uint32());
-        };
-
-        /**
-         * Verifies a SpreadHistoryUpdate message.
-         * @function verify
-         * @memberof ProtobufMarkets.SpreadHistoryUpdate
-         * @static
-         * @param {Object.<string,*>} message Plain object to verify
-         * @returns {string|null} `null` if valid, otherwise the reason why it is not
-         */
-        SpreadHistoryUpdate.verify = function verify(message) {
-            if (typeof message !== "object" || message === null)
-                return "object expected";
-            if (message.asks != null && message.hasOwnProperty("asks")) {
-                if (!Array.isArray(message.asks))
-                    return "asks: array expected";
-                for (var i = 0; i < message.asks.length; ++i) {
-                    var error = $root.ProtobufMarkets.SpreadHistoryUpdate.SpreadHistoryPoint.verify(message.asks[i]);
-                    if (error)
-                        return "asks." + error;
-                }
-            }
-            if (message.bids != null && message.hasOwnProperty("bids")) {
-                if (!Array.isArray(message.bids))
-                    return "bids: array expected";
-                for (var i = 0; i < message.bids.length; ++i) {
-                    var error = $root.ProtobufMarkets.SpreadHistoryUpdate.SpreadHistoryPoint.verify(message.bids[i]);
-                    if (error)
-                        return "bids." + error;
-                }
-            }
-            if (message.timestamp != null && message.hasOwnProperty("timestamp"))
-                if (!$util.isInteger(message.timestamp) && !(message.timestamp && $util.isInteger(message.timestamp.low) && $util.isInteger(message.timestamp.high)))
-                    return "timestamp: integer|Long expected";
-            if (message.bid != null && message.hasOwnProperty("bid")) {
-                var error = $root.ProtobufMarkets.Order.verify(message.bid);
-                if (error)
-                    return "bid." + error;
-            }
-            if (message.ask != null && message.hasOwnProperty("ask")) {
-                var error = $root.ProtobufMarkets.Order.verify(message.ask);
-                if (error)
-                    return "ask." + error;
-            }
-            return null;
-        };
-
-        /**
-         * Creates a SpreadHistoryUpdate message from a plain object. Also converts values to their respective internal types.
-         * @function fromObject
-         * @memberof ProtobufMarkets.SpreadHistoryUpdate
-         * @static
-         * @param {Object.<string,*>} object Plain object
-         * @returns {ProtobufMarkets.SpreadHistoryUpdate} SpreadHistoryUpdate
-         */
-        SpreadHistoryUpdate.fromObject = function fromObject(object) {
-            if (object instanceof $root.ProtobufMarkets.SpreadHistoryUpdate)
-                return object;
-            var message = new $root.ProtobufMarkets.SpreadHistoryUpdate();
-            if (object.asks) {
-                if (!Array.isArray(object.asks))
-                    throw TypeError(".ProtobufMarkets.SpreadHistoryUpdate.asks: array expected");
-                message.asks = [];
-                for (var i = 0; i < object.asks.length; ++i) {
-                    if (typeof object.asks[i] !== "object")
-                        throw TypeError(".ProtobufMarkets.SpreadHistoryUpdate.asks: object expected");
-                    message.asks[i] = $root.ProtobufMarkets.SpreadHistoryUpdate.SpreadHistoryPoint.fromObject(object.asks[i]);
-                }
-            }
-            if (object.bids) {
-                if (!Array.isArray(object.bids))
-                    throw TypeError(".ProtobufMarkets.SpreadHistoryUpdate.bids: array expected");
-                message.bids = [];
-                for (var i = 0; i < object.bids.length; ++i) {
-                    if (typeof object.bids[i] !== "object")
-                        throw TypeError(".ProtobufMarkets.SpreadHistoryUpdate.bids: object expected");
-                    message.bids[i] = $root.ProtobufMarkets.SpreadHistoryUpdate.SpreadHistoryPoint.fromObject(object.bids[i]);
-                }
-            }
-            if (object.timestamp != null)
-                if ($util.Long)
-                    (message.timestamp = $util.Long.fromValue(object.timestamp)).unsigned = false;
-                else if (typeof object.timestamp === "string")
-                    message.timestamp = parseInt(object.timestamp, 10);
-                else if (typeof object.timestamp === "number")
-                    message.timestamp = object.timestamp;
-                else if (typeof object.timestamp === "object")
-                    message.timestamp = new $util.LongBits(object.timestamp.low >>> 0, object.timestamp.high >>> 0).toNumber();
-            if (object.bid != null) {
-                if (typeof object.bid !== "object")
-                    throw TypeError(".ProtobufMarkets.SpreadHistoryUpdate.bid: object expected");
-                message.bid = $root.ProtobufMarkets.Order.fromObject(object.bid);
-            }
-            if (object.ask != null) {
-                if (typeof object.ask !== "object")
-                    throw TypeError(".ProtobufMarkets.SpreadHistoryUpdate.ask: object expected");
-                message.ask = $root.ProtobufMarkets.Order.fromObject(object.ask);
-            }
-            return message;
-        };
-
-        /**
-         * Creates a plain object from a SpreadHistoryUpdate message. Also converts values to other types if specified.
-         * @function toObject
-         * @memberof ProtobufMarkets.SpreadHistoryUpdate
-         * @static
-         * @param {ProtobufMarkets.SpreadHistoryUpdate} message SpreadHistoryUpdate
-         * @param {$protobuf.IConversionOptions} [options] Conversion options
-         * @returns {Object.<string,*>} Plain object
-         */
-        SpreadHistoryUpdate.toObject = function toObject(message, options) {
-            if (!options)
-                options = {};
-            var object = {};
-            if (options.arrays || options.defaults) {
-                object.asks = [];
-                object.bids = [];
-            }
-            if (options.defaults) {
-                if ($util.Long) {
-                    var long = new $util.Long(0, 0, false);
-                    object.timestamp = options.longs === String ? long.toString() : options.longs === Number ? long.toNumber() : long;
-                } else
-                    object.timestamp = options.longs === String ? "0" : 0;
-                object.bid = null;
-                object.ask = null;
-            }
-            if (message.asks && message.asks.length) {
-                object.asks = [];
-                for (var j = 0; j < message.asks.length; ++j)
-                    object.asks[j] = $root.ProtobufMarkets.SpreadHistoryUpdate.SpreadHistoryPoint.toObject(message.asks[j], options);
-            }
-            if (message.bids && message.bids.length) {
-                object.bids = [];
-                for (var j = 0; j < message.bids.length; ++j)
-                    object.bids[j] = $root.ProtobufMarkets.SpreadHistoryUpdate.SpreadHistoryPoint.toObject(message.bids[j], options);
-            }
-            if (message.timestamp != null && message.hasOwnProperty("timestamp"))
-                if (typeof message.timestamp === "number")
-                    object.timestamp = options.longs === String ? String(message.timestamp) : message.timestamp;
-                else
-                    object.timestamp = options.longs === String ? $util.Long.prototype.toString.call(message.timestamp) : options.longs === Number ? new $util.LongBits(message.timestamp.low >>> 0, message.timestamp.high >>> 0).toNumber() : message.timestamp;
-            if (message.bid != null && message.hasOwnProperty("bid"))
-                object.bid = $root.ProtobufMarkets.Order.toObject(message.bid, options);
-            if (message.ask != null && message.hasOwnProperty("ask"))
-                object.ask = $root.ProtobufMarkets.Order.toObject(message.ask, options);
-            return object;
-        };
-
-        /**
-         * Converts this SpreadHistoryUpdate to JSON.
-         * @function toJSON
-         * @memberof ProtobufMarkets.SpreadHistoryUpdate
-         * @instance
-         * @returns {Object.<string,*>} JSON object
-         */
-        SpreadHistoryUpdate.prototype.toJSON = function toJSON() {
-            return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
-        };
-
-        SpreadHistoryUpdate.SpreadHistoryPoint = (function() {
-
-            /**
-             * Properties of a SpreadHistoryPoint.
-             * @memberof ProtobufMarkets.SpreadHistoryUpdate
-             * @interface ISpreadHistoryPoint
-             * @property {number|Long|null} [timestamp] SpreadHistoryPoint timestamp
-             * @property {number|null} [price] SpreadHistoryPoint price
-             * @property {number|null} [amount] SpreadHistoryPoint amount
-             * @property {string|null} [priceStr] SpreadHistoryPoint priceStr
-             * @property {string|null} [amountStr] SpreadHistoryPoint amountStr
-             */
-
-            /**
-             * Constructs a new SpreadHistoryPoint.
-             * @memberof ProtobufMarkets.SpreadHistoryUpdate
-             * @classdesc Represents a SpreadHistoryPoint.
-             * @implements ISpreadHistoryPoint
-             * @constructor
-             * @param {ProtobufMarkets.SpreadHistoryUpdate.ISpreadHistoryPoint=} [properties] Properties to set
-             */
-            function SpreadHistoryPoint(properties) {
-                if (properties)
-                    for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                        if (properties[keys[i]] != null)
-                            this[keys[i]] = properties[keys[i]];
-            }
-
-            /**
-             * SpreadHistoryPoint timestamp.
-             * @member {number|Long} timestamp
-             * @memberof ProtobufMarkets.SpreadHistoryUpdate.SpreadHistoryPoint
-             * @instance
-             */
-            SpreadHistoryPoint.prototype.timestamp = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
-
-            /**
-             * SpreadHistoryPoint price.
-             * @member {number} price
-             * @memberof ProtobufMarkets.SpreadHistoryUpdate.SpreadHistoryPoint
-             * @instance
-             */
-            SpreadHistoryPoint.prototype.price = 0;
-
-            /**
-             * SpreadHistoryPoint amount.
-             * @member {number} amount
-             * @memberof ProtobufMarkets.SpreadHistoryUpdate.SpreadHistoryPoint
-             * @instance
-             */
-            SpreadHistoryPoint.prototype.amount = 0;
-
-            /**
-             * SpreadHistoryPoint priceStr.
-             * @member {string} priceStr
-             * @memberof ProtobufMarkets.SpreadHistoryUpdate.SpreadHistoryPoint
-             * @instance
-             */
-            SpreadHistoryPoint.prototype.priceStr = "";
-
-            /**
-             * SpreadHistoryPoint amountStr.
-             * @member {string} amountStr
-             * @memberof ProtobufMarkets.SpreadHistoryUpdate.SpreadHistoryPoint
-             * @instance
-             */
-            SpreadHistoryPoint.prototype.amountStr = "";
-
-            /**
-             * Creates a new SpreadHistoryPoint instance using the specified properties.
-             * @function create
-             * @memberof ProtobufMarkets.SpreadHistoryUpdate.SpreadHistoryPoint
-             * @static
-             * @param {ProtobufMarkets.SpreadHistoryUpdate.ISpreadHistoryPoint=} [properties] Properties to set
-             * @returns {ProtobufMarkets.SpreadHistoryUpdate.SpreadHistoryPoint} SpreadHistoryPoint instance
-             */
-            SpreadHistoryPoint.create = function create(properties) {
-                return new SpreadHistoryPoint(properties);
-            };
-
-            /**
-             * Encodes the specified SpreadHistoryPoint message. Does not implicitly {@link ProtobufMarkets.SpreadHistoryUpdate.SpreadHistoryPoint.verify|verify} messages.
-             * @function encode
-             * @memberof ProtobufMarkets.SpreadHistoryUpdate.SpreadHistoryPoint
-             * @static
-             * @param {ProtobufMarkets.SpreadHistoryUpdate.ISpreadHistoryPoint} message SpreadHistoryPoint message or plain object to encode
-             * @param {$protobuf.Writer} [writer] Writer to encode to
-             * @returns {$protobuf.Writer} Writer
-             */
-            SpreadHistoryPoint.encode = function encode(message, writer) {
-                if (!writer)
-                    writer = $Writer.create();
-                if (message.timestamp != null && message.hasOwnProperty("timestamp"))
-                    writer.uint32(/* id 1, wireType 0 =*/8).int64(message.timestamp);
-                if (message.price != null && message.hasOwnProperty("price"))
-                    writer.uint32(/* id 2, wireType 5 =*/21).float(message.price);
-                if (message.amount != null && message.hasOwnProperty("amount"))
-                    writer.uint32(/* id 3, wireType 5 =*/29).float(message.amount);
-                if (message.priceStr != null && message.hasOwnProperty("priceStr"))
-                    writer.uint32(/* id 4, wireType 2 =*/34).string(message.priceStr);
-                if (message.amountStr != null && message.hasOwnProperty("amountStr"))
-                    writer.uint32(/* id 5, wireType 2 =*/42).string(message.amountStr);
-                return writer;
-            };
-
-            /**
-             * Encodes the specified SpreadHistoryPoint message, length delimited. Does not implicitly {@link ProtobufMarkets.SpreadHistoryUpdate.SpreadHistoryPoint.verify|verify} messages.
-             * @function encodeDelimited
-             * @memberof ProtobufMarkets.SpreadHistoryUpdate.SpreadHistoryPoint
-             * @static
-             * @param {ProtobufMarkets.SpreadHistoryUpdate.ISpreadHistoryPoint} message SpreadHistoryPoint message or plain object to encode
-             * @param {$protobuf.Writer} [writer] Writer to encode to
-             * @returns {$protobuf.Writer} Writer
-             */
-            SpreadHistoryPoint.encodeDelimited = function encodeDelimited(message, writer) {
-                return this.encode(message, writer).ldelim();
-            };
-
-            /**
-             * Decodes a SpreadHistoryPoint message from the specified reader or buffer.
-             * @function decode
-             * @memberof ProtobufMarkets.SpreadHistoryUpdate.SpreadHistoryPoint
-             * @static
-             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
-             * @param {number} [length] Message length if known beforehand
-             * @returns {ProtobufMarkets.SpreadHistoryUpdate.SpreadHistoryPoint} SpreadHistoryPoint
-             * @throws {Error} If the payload is not a reader or valid buffer
-             * @throws {$protobuf.util.ProtocolError} If required fields are missing
-             */
-            SpreadHistoryPoint.decode = function decode(reader, length) {
-                if (!(reader instanceof $Reader))
-                    reader = $Reader.create(reader);
-                var end = length === undefined ? reader.len : reader.pos + length, message = new $root.ProtobufMarkets.SpreadHistoryUpdate.SpreadHistoryPoint();
-                while (reader.pos < end) {
-                    var tag = reader.uint32();
-                    switch (tag >>> 3) {
-                    case 1:
-                        message.timestamp = reader.int64();
-                        break;
-                    case 2:
-                        message.price = reader.float();
-                        break;
-                    case 3:
-                        message.amount = reader.float();
-                        break;
-                    case 4:
-                        message.priceStr = reader.string();
-                        break;
-                    case 5:
-                        message.amountStr = reader.string();
-                        break;
-                    default:
-                        reader.skipType(tag & 7);
-                        break;
-                    }
-                }
-                return message;
-            };
-
-            /**
-             * Decodes a SpreadHistoryPoint message from the specified reader or buffer, length delimited.
-             * @function decodeDelimited
-             * @memberof ProtobufMarkets.SpreadHistoryUpdate.SpreadHistoryPoint
-             * @static
-             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
-             * @returns {ProtobufMarkets.SpreadHistoryUpdate.SpreadHistoryPoint} SpreadHistoryPoint
-             * @throws {Error} If the payload is not a reader or valid buffer
-             * @throws {$protobuf.util.ProtocolError} If required fields are missing
-             */
-            SpreadHistoryPoint.decodeDelimited = function decodeDelimited(reader) {
-                if (!(reader instanceof $Reader))
-                    reader = new $Reader(reader);
-                return this.decode(reader, reader.uint32());
-            };
-
-            /**
-             * Verifies a SpreadHistoryPoint message.
-             * @function verify
-             * @memberof ProtobufMarkets.SpreadHistoryUpdate.SpreadHistoryPoint
-             * @static
-             * @param {Object.<string,*>} message Plain object to verify
-             * @returns {string|null} `null` if valid, otherwise the reason why it is not
-             */
-            SpreadHistoryPoint.verify = function verify(message) {
-                if (typeof message !== "object" || message === null)
-                    return "object expected";
-                if (message.timestamp != null && message.hasOwnProperty("timestamp"))
-                    if (!$util.isInteger(message.timestamp) && !(message.timestamp && $util.isInteger(message.timestamp.low) && $util.isInteger(message.timestamp.high)))
-                        return "timestamp: integer|Long expected";
-                if (message.price != null && message.hasOwnProperty("price"))
-                    if (typeof message.price !== "number")
-                        return "price: number expected";
-                if (message.amount != null && message.hasOwnProperty("amount"))
-                    if (typeof message.amount !== "number")
-                        return "amount: number expected";
-                if (message.priceStr != null && message.hasOwnProperty("priceStr"))
-                    if (!$util.isString(message.priceStr))
-                        return "priceStr: string expected";
-                if (message.amountStr != null && message.hasOwnProperty("amountStr"))
-                    if (!$util.isString(message.amountStr))
-                        return "amountStr: string expected";
-                return null;
-            };
-
-            /**
-             * Creates a SpreadHistoryPoint message from a plain object. Also converts values to their respective internal types.
-             * @function fromObject
-             * @memberof ProtobufMarkets.SpreadHistoryUpdate.SpreadHistoryPoint
-             * @static
-             * @param {Object.<string,*>} object Plain object
-             * @returns {ProtobufMarkets.SpreadHistoryUpdate.SpreadHistoryPoint} SpreadHistoryPoint
-             */
-            SpreadHistoryPoint.fromObject = function fromObject(object) {
-                if (object instanceof $root.ProtobufMarkets.SpreadHistoryUpdate.SpreadHistoryPoint)
-                    return object;
-                var message = new $root.ProtobufMarkets.SpreadHistoryUpdate.SpreadHistoryPoint();
-                if (object.timestamp != null)
-                    if ($util.Long)
-                        (message.timestamp = $util.Long.fromValue(object.timestamp)).unsigned = false;
-                    else if (typeof object.timestamp === "string")
-                        message.timestamp = parseInt(object.timestamp, 10);
-                    else if (typeof object.timestamp === "number")
-                        message.timestamp = object.timestamp;
-                    else if (typeof object.timestamp === "object")
-                        message.timestamp = new $util.LongBits(object.timestamp.low >>> 0, object.timestamp.high >>> 0).toNumber();
-                if (object.price != null)
-                    message.price = Number(object.price);
-                if (object.amount != null)
-                    message.amount = Number(object.amount);
-                if (object.priceStr != null)
-                    message.priceStr = String(object.priceStr);
-                if (object.amountStr != null)
-                    message.amountStr = String(object.amountStr);
-                return message;
-            };
-
-            /**
-             * Creates a plain object from a SpreadHistoryPoint message. Also converts values to other types if specified.
-             * @function toObject
-             * @memberof ProtobufMarkets.SpreadHistoryUpdate.SpreadHistoryPoint
-             * @static
-             * @param {ProtobufMarkets.SpreadHistoryUpdate.SpreadHistoryPoint} message SpreadHistoryPoint
-             * @param {$protobuf.IConversionOptions} [options] Conversion options
-             * @returns {Object.<string,*>} Plain object
-             */
-            SpreadHistoryPoint.toObject = function toObject(message, options) {
-                if (!options)
-                    options = {};
-                var object = {};
-                if (options.defaults) {
-                    if ($util.Long) {
-                        var long = new $util.Long(0, 0, false);
-                        object.timestamp = options.longs === String ? long.toString() : options.longs === Number ? long.toNumber() : long;
-                    } else
-                        object.timestamp = options.longs === String ? "0" : 0;
-                    object.price = 0;
-                    object.amount = 0;
-                    object.priceStr = "";
-                    object.amountStr = "";
-                }
-                if (message.timestamp != null && message.hasOwnProperty("timestamp"))
-                    if (typeof message.timestamp === "number")
-                        object.timestamp = options.longs === String ? String(message.timestamp) : message.timestamp;
-                    else
-                        object.timestamp = options.longs === String ? $util.Long.prototype.toString.call(message.timestamp) : options.longs === Number ? new $util.LongBits(message.timestamp.low >>> 0, message.timestamp.high >>> 0).toNumber() : message.timestamp;
-                if (message.price != null && message.hasOwnProperty("price"))
-                    object.price = options.json && !isFinite(message.price) ? String(message.price) : message.price;
-                if (message.amount != null && message.hasOwnProperty("amount"))
-                    object.amount = options.json && !isFinite(message.amount) ? String(message.amount) : message.amount;
-                if (message.priceStr != null && message.hasOwnProperty("priceStr"))
-                    object.priceStr = message.priceStr;
-                if (message.amountStr != null && message.hasOwnProperty("amountStr"))
-                    object.amountStr = message.amountStr;
-                return object;
-            };
-
-            /**
-             * Converts this SpreadHistoryPoint to JSON.
-             * @function toJSON
-             * @memberof ProtobufMarkets.SpreadHistoryUpdate.SpreadHistoryPoint
-             * @instance
-             * @returns {Object.<string,*>} JSON object
-             */
-            SpreadHistoryPoint.prototype.toJSON = function toJSON() {
-                return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
-            };
-
-            return SpreadHistoryPoint;
-        })();
-
-        return SpreadHistoryUpdate;
     })();
 
     ProtobufMarkets.PairUpdateMessage = (function() {

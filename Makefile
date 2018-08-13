@@ -20,7 +20,7 @@ proto_ts_definitions: node_modules
 	rm proto.d.ts
 
 node_modules:
-	npm i
+	yarn
 
 .PHONY: test
 test: node_modules
@@ -29,3 +29,13 @@ test: node_modules
 .PHONY: clean
 clean:
 	rm -rf build dist
+
+difftest: dist
+	@TMP=$$(mktemp -t checkout-diff.XXXXXX) ; \
+    git diff dist/ > $$TMP ; \
+    if [ -s "$$TMP" ]; then \
+      echo Found diffs in checkout:; git status -s; head -n 50 "$$TMP"; \
+      rm $$TMP; \
+      exit 1; \
+    fi; \
+    rm $$TMP;
