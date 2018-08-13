@@ -1,6 +1,6 @@
 {
   "name": "cw-stream-client",
-  "version": "0.0.6",
+  "version": "0.0.7-pre",
   "description": "A library for managing connections to Cryptowatch Websocket Streaming API",
   "author": "Cryptowatch <infra@cryptowatch>",
   "homepage": "https://cryptowat.ch/docs/streaming-api",
