@@ -7,3 +7,4 @@ tsconfig*
 tslint.json
 
 Makefile
+yarn.lock

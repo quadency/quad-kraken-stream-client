@@ -175,6 +175,9 @@ The `cw-stream-client` package exports 3 objects in addition to the client: `STA
 - `CLIENT_ERROR` - when any of the `ERROR` states listed above occur
 - `STATE_CHANGE` - when any of the `STATE` changes listed above occur
 
+## Notes
+Some of our [protobuf message definitions](https://github.com/cryptowatch/proto) use the `uint64` data type, which is not included in JavaScript. To circumvent this, those types are returned as [Long](https://github.com/dcodeIO/long.js). You can safely use Long's `toNumber()` method to get the desired value. None of our `uint64` types will ever exceed the 64-bit floating point limitation.
+
 ## Testing
 Tests are written using `jest`. Run tests with:
 ```
