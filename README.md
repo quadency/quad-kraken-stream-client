@@ -185,4 +185,4 @@ make test
 ```
 
 ## License
-[BSD](LICENSE)
+[BSD-2-Clause](LICENSE)
