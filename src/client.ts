@@ -66,8 +66,11 @@ export enum ERROR {
   UNKNOWN = "unknown error"
 }
 
+const backoffIncrement = 0.5;
+
 // These will be overwritten by the opts object passed to the constructor
 const defaultOptions: IStreamOptions = {
+  // The stream url to connect to
   url: "wss://stream.cryptowat.ch",
 
   // apiKey and secretKey are both Required. Obtain from https://cryptowat.ch/account/stream-api
@@ -87,8 +90,8 @@ const defaultOptions: IStreamOptions = {
   // It will not exceed maxReconnectTimeout
   backoff: true,
 
-  // Initial reconnect timeout (seconds), minimum 1s
-  reconnectTimeout: 1,
+  // Initial reconnect timeout (seconds); a minimum of 1 will be used if backoff=false
+  reconnectTimeout: 0,
 
   // The maximum amount of time between reconnect tries (applies to backoff)
   maxReconnectTimeout: 30,
@@ -120,6 +123,11 @@ export class CWStreamClient extends EventEmitter {
     }
     if (process.env.CW_SECRET_KEY) {
       opts.secretKey = process.env.CW_SECRET_KEY;
+    }
+
+    // Don't allow reconnectTimeout to be less than 1 second if backoff=false
+    if (!opts.backoff && opts.reconnectTimeout < 1) {
+      opts.reconnectTimeout = 1;
     }
 
     this.session = Object.assign(defaultOptions, opts);
@@ -161,16 +169,12 @@ export class CWStreamClient extends EventEmitter {
       this.authenticate();
     });
     this.conn.on("message", (data: Buffer) => this.handleMessage(data));
+    this.conn.once("error", err => {
+      this.emit(ERROR.CONNECTION_REFUSED);
+    });
     this.conn.once("close", () => {
       this.emit(STATE.DISCONNECTED);
       if (this.session.reconnect && !this.reconnectDisabled) {
-        this.reconnect();
-      }
-    });
-    this.conn.once("error", err => {
-      this.emit(ERROR.CONNECTION_REFUSED);
-      this.emit(STATE.DISCONNECTED);
-      if (this.session.reconnect) {
         this.reconnect();
       }
     });
@@ -240,10 +244,7 @@ export class CWStreamClient extends EventEmitter {
   private reconnect(): void {
     setTimeout(() => {
       if (this.session.backoff) {
-        if (this.session.reconnectTimeout < 1) {
-          this.session.reconnectTimeout = 1;
-        }
-        this.session.reconnectTimeout *= 2;
+        this.session.reconnectTimeout += backoffIncrement;
         if (this.session.reconnectTimeout > this.session.maxReconnectTimeout) {
           this.session.reconnectTimeout = this.session.maxReconnectTimeout;
         }

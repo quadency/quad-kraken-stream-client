@@ -14,6 +14,7 @@ import {
 
 import { ProtobufClient, ProtobufStream } from "../modules/proto";
 
+// Use different ports so tests can be run concurrently
 const MOCK_SERVER_PORTS = [9999, 9998, 9997, 9996];
 const VALID_TOKEN =
   "55v1hv+29RY+xdtJBnFeyoFLjY4r+d8kmx761jCPWi5NgJJPqjPBp5SdqXjrTy/wBoRIcwGAUFVtpGrY7QAOLw==";
@@ -391,19 +392,18 @@ test("connection closed, reconnect with backoff", done => {
     .set("url", url)
     .set("reconnect", true)
     .set("backoff", true)
-    .set("reconnectTimeout", 1)
-    .set("maxReconnectTimeout", 30);
+    .set("reconnectTimeout", 0)
+    .set("maxReconnectTimeout", 3);
 
-  // Using exponential backoff, with a maxReconnectTimeout of 30s, these are the
+  // Using linear backoff, with a maxReconnectTimeout of 3s, these are the
   // first 7 expected timeouts
-  const expectedTimeouts = [1, 2, 4, 8, 16, 30, 30];
+  const expectedTimeouts = [0, 0.5, 1, 1.5, 2, 2.5, 3, 3];
 
   expect.assertions(expectedTimeouts.length);
 
   client.on(STATE.WAITING_TO_RECONNECT, time => {
-    // Ensure the client's reconnectTimeout has been updated with
-    // exponential backoff
-    expect(client.get("reconnectTimeout")).toBe(expectedTimeouts.shift());
+    // Ensure the client's reconnectTimeout has been updated with backoff
+    expect(time).toBe(expectedTimeouts.shift());
 
     if (expectedTimeouts.length === 0) {
       wss.close();

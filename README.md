@@ -79,19 +79,19 @@ client.connect();
 The following object contains the default connection settings. Any of these can be overridden by passing your own settings object to the constructor, or by calling `client.set(key, val)`.
 ```javascript
 const defaultOptions = {
-  // The stream url to connect to.
+  // The stream url to connect to
   url: "wss://stream.cryptowat.ch",
 
   // apiKey and secretKey are both Required. Obtain from https://cryptowat.ch/account/stream-api
-  // Environment variables CW_API_KEY and CW_SECRET_KEY take precedence over these settings.
+  // These defaults will be overwritten by environment variables CW_API_KEY and CW_SECRET_KEY,
+  // and environment variables will be overwritten by settings passed to the constructor.
   apiKey: "",
   secretKey: "",
 
-  // Required. A list of stream data subscriptions.
-  // TODO link to subscription keys docs
+  // A list of subscriptions to subscribe to on connection
   subscriptions: [],
 
-  // Whether the client should reconnect automatically
+  // Whether the library should reconnect automatically
   reconnect: true,
 
   // Reconnection backoff: if true, then the reconnection time will be initially
@@ -99,8 +99,8 @@ const defaultOptions = {
   // It will not exceed maxReconnectTimeout
   backoff: true,
 
-  // Initial reconnect timeout (seconds), minimum 1s
-  reconnectTimeout: 1,
+  // Initial reconnect timeout (seconds); a minimum of 1 will be used if backoff=false
+  reconnectTimeout: 0,
 
   // The maximum amount of time between reconnect tries (applies to backoff)
   maxReconnectTimeout: 30,
