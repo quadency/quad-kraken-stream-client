@@ -9,6 +9,8 @@ import {
   APIAuthenticationMessage,
   AuthenticationResult,
   ClientMessage,
+  ClientSubscribeMessage,
+  ClientUnsubscribeMessage,
   MarketUpdateMessage,
   StreamMessage
 } from "./proto-builders";
@@ -73,7 +75,7 @@ const defaultOptions: IStreamOptions = {
   // The stream url to connect to
   url: "wss://stream.cryptowat.ch",
 
-  // apiKey and secretKey are both Required. Obtain from https://cryptowat.ch/account/stream-api
+  // apiKey and secretKey are both required. Obtain from https://cryptowat.ch/account/stream-api
   // These defaults will be overwritten by environment variables CW_API_KEY and CW_SECRET_KEY,
   // and environment variables will be overwritten by settings passed to the constructor.
   apiKey: "",
@@ -107,17 +109,20 @@ const defaultOptions: IStreamOptions = {
 export class CWStreamClient extends EventEmitter {
   private session: IStreamOptions;
   private currentState: STATE;
+  private subscriptionState: { [key: string]: boolean };
 
   // Handles Websocket connection to the CW Stream service
   private conn: WebSocket;
 
-  // shouldReconnect is used internally to avoid reconnecting if the client wants to disconnect.
-  // This is separate from this.session.reconnect, which is a config option.
+  // This is used internally to avoid reconnecting if the client calls disconnect(),
+  // and is separate from this.session.reconnect (a config option).
   private reconnectDisabled: boolean;
 
-  constructor(opts: IStreamOptions) {
+  // Default to defaultOptions
+  constructor(opts: IStreamOptions = defaultOptions) {
     super();
 
+    // Environment variables
     if (process.env.CW_API_KEY) {
       opts.apiKey = process.env.CW_API_KEY;
     }
@@ -125,11 +130,12 @@ export class CWStreamClient extends EventEmitter {
       opts.secretKey = process.env.CW_SECRET_KEY;
     }
 
-    // Don't allow reconnectTimeout to be less than 1 second if backoff=false
+    // Set minimum reconnectTimeout of 1s if backoff=false
     if (!opts.backoff && opts.reconnectTimeout < 1) {
       opts.reconnectTimeout = 1;
     }
 
+    // Merge supplied options with defaults
     this.session = Object.assign(defaultOptions, opts);
 
     if (this.session.apiKey.length === 0) {
@@ -138,6 +144,13 @@ export class CWStreamClient extends EventEmitter {
     if (this.session.secretKey.length === 0) {
       throw new Error(ERROR.MISSING_SECRET_KEY);
     }
+
+    // Keep track of subscriptions in case we need to reconnect after the client
+    // has called subscribe()
+    this.subscriptionState = {};
+    this.session.subscriptions.forEach(x => {
+      this.subscriptionState[x] = true;
+    });
 
     this.currentState = STATE.WAITING_TO_CONNECT;
 
@@ -162,6 +175,7 @@ export class CWStreamClient extends EventEmitter {
   }
 
   public connect(): void {
+    // Reset reconnectDisabled since the user called connect() again
     this.reconnectDisabled = false;
     this.emit(STATE.CONNECTING);
     this.conn = new WebSocket(this.session.url);
@@ -178,6 +192,34 @@ export class CWStreamClient extends EventEmitter {
         this.reconnect();
       }
     });
+  }
+
+  public subscribe(keys: string[]): void {
+    const subMsg = ClientMessage.create({
+      subscribe: ClientSubscribeMessage.create({
+        subscriptionKeys: keys
+      })
+    });
+    this.send(ClientMessage.encode(subMsg).finish());
+    keys.forEach(x => {
+      this.subscriptionState[x] = true;
+    });
+  }
+
+  public unsubscribe(keys: string[]): void {
+    const subMsg = ClientMessage.create({
+      unsubscribe: ClientUnsubscribeMessage.create({
+        subscriptionKeys: keys
+      })
+    });
+    this.send(ClientMessage.encode(subMsg).finish());
+    keys.forEach(x => {
+      delete this.subscriptionState[x];
+    });
+  }
+
+  public subscriptions(): string[] {
+    return Object.keys(this.subscriptionState);
   }
 
   public generateToken(nonce: string): string {
@@ -232,11 +274,6 @@ export class CWStreamClient extends EventEmitter {
     return this.currentState;
   }
 
-  public set(key: string, val: any): CWStreamClient {
-    this.session[key] = val;
-    return this;
-  }
-
   public get(key: string): any {
     return this.session[key];
   }
@@ -266,7 +303,7 @@ export class CWStreamClient extends EventEmitter {
         apiKey: this.session.apiKey,
         nonce,
         source: ProtobufClient.APIAuthenticationMessage.Source.NODE_SDK,
-        subscriptions: this.session.subscriptions,
+        subscriptions: this.subscriptions(),
         token,
         version: pjson.version
       })

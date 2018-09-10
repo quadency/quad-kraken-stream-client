@@ -14,13 +14,14 @@ import {
 
 import { ProtobufClient, ProtobufStream } from "../modules/proto";
 
-// Use different ports so tests can be run concurrently
-const MOCK_SERVER_PORTS = [9999, 9998, 9997, 9996];
 const VALID_TOKEN =
   "55v1hv+29RY+xdtJBnFeyoFLjY4r+d8kmx761jCPWi5NgJJPqjPBp5SdqXjrTy/wBoRIcwGAUFVtpGrY7QAOLw==";
 
+let MOCK_SERVER_PORT = 9999;
+
 function mockServer() {
-  const port = MOCK_SERVER_PORTS.shift();
+  // Use different ports so tests can be run concurrently
+  const port = MOCK_SERVER_PORT--;
   const wss = new Server({ port });
   return {
     url: `ws://localhost:${port}`,
@@ -28,7 +29,7 @@ function mockServer() {
   };
 }
 
-// Api key pair, nonce, and the valid token
+// Api key pair and nonce that produce VALID_TOKEN (convenient for testing)
 const TEST_OPTS: IStreamOptions = {
   apiKey: "foo",
   nonce: "1531344872326000000",
@@ -36,28 +37,25 @@ const TEST_OPTS: IStreamOptions = {
   secretKey: "YmFy"
 };
 
+// Return a fresh options object based on TEST_OPTS, but overwritten by extra
+function getOpts(extra?: object): IStreamOptions {
+  const opts = (Object as any).assign({}, TEST_OPTS);
+  return (Object as any).assign(opts, extra);
+}
+
 test("throw error for missing credentials", () => {
   function createStreamWithoutSecretKey(): CWStreamClient {
-    return new CWStreamClient({
-      apiKey: TEST_OPTS.apiKey,
-      secretKey: ""
-    });
+    return new CWStreamClient(getOpts({ secretKey: "" }));
   }
   function createStreamWithoutApiKey(): CWStreamClient {
-    return new CWStreamClient({
-      apiKey: "",
-      secretKey: TEST_OPTS.secretKey
-    });
+    return new CWStreamClient(getOpts({ apiKey: "" }));
   }
   expect(createStreamWithoutApiKey).toThrow(ERROR.MISSING_API_KEY);
   expect(createStreamWithoutSecretKey).toThrow(ERROR.MISSING_SECRET_KEY);
 });
 
 test("token generation", () => {
-  const client = new CWStreamClient({
-    apiKey: TEST_OPTS.apiKey,
-    secretKey: TEST_OPTS.secretKey
-  });
+  const client = new CWStreamClient(getOpts());
   const token = client.generateToken(TEST_OPTS.nonce);
   expect(token).toBe(VALID_TOKEN);
 });
@@ -94,10 +92,12 @@ test("connect to stream", done => {
     });
   });
 
-  const client = new CWStreamClient(TEST_OPTS);
-  client.set("url", url);
-  client.set("subscriptions", subscriptions);
-  client.set("url", url);
+  const client = new CWStreamClient(
+    getOpts({
+      subscriptions,
+      url
+    })
+  );
 
   expect(client.state()).toBe(STATE.WAITING_TO_CONNECT);
 
@@ -194,9 +194,12 @@ test("handle authentication errors", done => {
 
   // Bad token
   series.push(next => {
-    const client = new CWStreamClient(TEST_OPTS);
-    client.set("apiKey", badApiKey);
-    client.set("url", url);
+    const client = new CWStreamClient(
+      getOpts({
+        apiKey: badApiKey,
+        url
+      })
+    );
 
     client.onError(error => {
       expect(error).toBe(ERROR.BAD_TOKEN);
@@ -216,9 +219,7 @@ test("handle authentication errors", done => {
 
   // Bad nonce
   series.push(next => {
-    const client = new CWStreamClient(TEST_OPTS);
-    client.set("nonce", badNonce);
-    client.set("url", url);
+    const client = new CWStreamClient(getOpts({ nonce: badNonce, url }));
 
     client.onError(error => {
       expect(error).toBe(ERROR.BAD_NONCE);
@@ -238,9 +239,12 @@ test("handle authentication errors", done => {
 
   // Expired token
   series.push(next => {
-    const client = new CWStreamClient(TEST_OPTS);
-    client.set("nonce", expiredNonce);
-    client.set("url", url);
+    const client = new CWStreamClient(
+      getOpts({
+        nonce: expiredNonce,
+        url
+      })
+    );
 
     client.onError(error => {
       expect(error).toBe(ERROR.TOKEN_EXPIRED);
@@ -260,8 +264,11 @@ test("handle authentication errors", done => {
 
   // Unknown error
   series.push(next => {
-    const client = new CWStreamClient(TEST_OPTS);
-    client.set("url", url);
+    const client = new CWStreamClient(
+      getOpts({
+        url
+      })
+    );
 
     client.onError(error => {
       expect(error).toBe(ERROR.UNKNOWN);
@@ -340,7 +347,11 @@ test("streaming data", done => {
     });
   });
 
-  const client = new CWStreamClient(TEST_OPTS).set("url", url);
+  const client = new CWStreamClient(
+    getOpts({
+      url
+    })
+  );
 
   client.onConnect(() => {
     client.send(Buffer.from(REQ_MSG_1));
@@ -368,11 +379,11 @@ test("streaming data", done => {
 });
 
 test("connection refused", done => {
-  const client = new CWStreamClient(TEST_OPTS).set(
-    "url",
-    "ws://localhost:9000"
+  const client = new CWStreamClient(
+    getOpts({
+      reconnect: false
+    })
   );
-  client.set("reconnect", false);
   client.on(ERROR.CONNECTION_REFUSED, () => {
     done();
   });
@@ -388,12 +399,15 @@ test("connection closed, reconnect with backoff", done => {
     ws.close();
   });
 
-  const client = new CWStreamClient(TEST_OPTS)
-    .set("url", url)
-    .set("reconnect", true)
-    .set("backoff", true)
-    .set("reconnectTimeout", 0)
-    .set("maxReconnectTimeout", 3);
+  const client = new CWStreamClient(
+    getOpts({
+      backoff: true,
+      maxReconnectTimeout: 3,
+      reconnect: true,
+      reconnectTimeout: 0,
+      url
+    })
+  );
 
   // Using linear backoff, with a maxReconnectTimeout of 3s, these are the
   // first 7 expected timeouts
@@ -412,6 +426,56 @@ test("connection closed, reconnect with backoff", done => {
       // Advance the mocked setTimeouts
       jest.runOnlyPendingTimers();
     }
+  });
+
+  client.connect();
+});
+
+test("subscribe and unsubscribe", done => {
+  const { wss, url } = mockServer();
+
+  const subscribe1 = ["foo"];
+  const subscribe2 = ["bar", "baz", "woo"];
+
+  expect.assertions(3);
+
+  wss.on("connection", ws => {
+    ws.on("message", (data: Uint8Array) => {
+      const msg: ProtobufClient.ClientMessage = ClientMessage.decode(data);
+
+      if (msg.apiAuthentication) {
+        expect(msg.apiAuthentication.subscriptions).toEqual(subscribe1);
+        ws.send(
+          StreamMessage.encode(
+            StreamMessage.create({
+              authenticationResult: AuthenticationResult.create({
+                status: ProtobufStream.AuthenticationResult.Status.AUTHENTICATED
+              })
+            })
+          ).finish()
+        );
+      }
+
+      if (msg.subscribe) {
+        expect(msg.subscribe.subscriptionKeys).toEqual(subscribe2);
+        expect(client.subscriptions().sort()).toEqual(
+          ["foo", "bar", "baz", "woo"].sort()
+        );
+        done();
+        wss.close();
+      }
+    });
+  });
+
+  const client = new CWStreamClient(
+    getOpts({
+      subscriptions: ["foo"],
+      url
+    })
+  );
+
+  client.onConnect(() => {
+    client.subscribe(subscribe2);
   });
 
   client.connect();

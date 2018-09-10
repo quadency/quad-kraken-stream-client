@@ -1,3 +1,5 @@
+all: test build dist
+
 .PHONY: build
 build: proto_ts_definitions
 	npm run build

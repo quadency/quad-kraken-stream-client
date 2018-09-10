@@ -82,7 +82,7 @@ const defaultOptions = {
   // The stream url to connect to
   url: "wss://stream.cryptowat.ch",
 
-  // apiKey and secretKey are both Required. Obtain from https://cryptowat.ch/account/stream-api
+  // apiKey and secretKey are both required. Obtain from https://cryptowat.ch/account/stream-api
   // These defaults will be overwritten by environment variables CW_API_KEY and CW_SECRET_KEY,
   // and environment variables will be overwritten by settings passed to the constructor.
   apiKey: "",
