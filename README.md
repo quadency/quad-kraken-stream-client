@@ -76,7 +76,7 @@ client.connect();
 ```
 
 ## Settings
-The following object contains the default connection settings. Any of these can be overridden by passing your own settings object to the constructor, or by calling `client.set(key, val)`.
+The following object contains the default connection settings. Any of these can be overridden by passing your own settings object to the constructor.
 ```javascript
 const defaultOptions = {
   // The stream url to connect to
