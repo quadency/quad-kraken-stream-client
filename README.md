@@ -113,9 +113,6 @@ const defaultOptions = {
 ## Methods
 The following methods are available on an instance of `CWStreamClient`.
 
-#### set(key, val)
-Overrides the client's settings, setting `key` to `val`. `key` must be a valid [setting](#settings). `this` is returned, so `set` calls can be chained.
-
 #### get(key)
 Gets a client's setting `key`. `key` must be a valid [setting](#settings).
 
@@ -124,6 +121,12 @@ Initiates connection to websocket api.
 
 #### disconnect()
 Kills connection to the websocket api. You will need to re-authenticate if you call `connect()` again.
+
+#### subscribe(keys)
+Subscribes the client to each of `keys`. `keys` should be an array of valid subscription id strings.
+
+#### unsubscribe(keys)
+Unsubscribes the client from each of `keys`. `keys` should be an array of valid subscription id strings.
 
 #### state()
 Returns the current client connection [state](#states).
