@@ -26,7 +26,7 @@ node_modules:
 
 .PHONY: test
 test: node_modules
-	npm test
+	timeout -k 5s 150s npm test
 
 .PHONY: clean
 clean:

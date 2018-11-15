@@ -1155,6 +1155,7 @@ $root.ProtobufClient = (function() {
                 case 1:
                 case 2:
                 case 3:
+                case 4:
                     break;
                 }
             if (message.version != null && message.hasOwnProperty("version"))
@@ -1204,6 +1205,10 @@ $root.ProtobufClient = (function() {
             case "NODE_SDK":
             case 3:
                 message.source = 3;
+                break;
+            case "CW_WEB":
+            case 4:
+                message.source = 4;
                 break;
             }
             if (object.version != null)
@@ -1277,6 +1282,7 @@ $root.ProtobufClient = (function() {
          * @property {number} GOLANG_SDK=1 GOLANG_SDK value
          * @property {number} JAVASCRIPT_SDK=2 JAVASCRIPT_SDK value
          * @property {number} NODE_SDK=3 NODE_SDK value
+         * @property {number} CW_WEB=4 CW_WEB value
          */
         APIAuthenticationMessage.Source = (function() {
             var valuesById = {}, values = Object.create(valuesById);
@@ -1284,6 +1290,7 @@ $root.ProtobufClient = (function() {
             values[valuesById[1] = "GOLANG_SDK"] = 1;
             values[valuesById[2] = "JAVASCRIPT_SDK"] = 2;
             values[valuesById[3] = "NODE_SDK"] = 3;
+            values[valuesById[4] = "CW_WEB"] = 4;
             return values;
         })();
 
@@ -2467,17 +2474,438 @@ $root.ProtobufMarkets = (function() {
      */
     var ProtobufMarkets = {};
 
+    ProtobufMarkets.AssetUpdateMessage = (function() {
+
+        /**
+         * Properties of an AssetUpdateMessage.
+         * @memberof ProtobufMarkets
+         * @interface IAssetUpdateMessage
+         * @property {number|null} [asset] AssetUpdateMessage asset
+         * @property {ProtobufMarkets.IAssetUSDVolumeUpdate|null} [usdVolumeUpdate] AssetUpdateMessage usdVolumeUpdate
+         */
+
+        /**
+         * Constructs a new AssetUpdateMessage.
+         * @memberof ProtobufMarkets
+         * @classdesc Represents an AssetUpdateMessage.
+         * @implements IAssetUpdateMessage
+         * @constructor
+         * @param {ProtobufMarkets.IAssetUpdateMessage=} [properties] Properties to set
+         */
+        function AssetUpdateMessage(properties) {
+            if (properties)
+                for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                    if (properties[keys[i]] != null)
+                        this[keys[i]] = properties[keys[i]];
+        }
+
+        /**
+         * AssetUpdateMessage asset.
+         * @member {number} asset
+         * @memberof ProtobufMarkets.AssetUpdateMessage
+         * @instance
+         */
+        AssetUpdateMessage.prototype.asset = 0;
+
+        /**
+         * AssetUpdateMessage usdVolumeUpdate.
+         * @member {ProtobufMarkets.IAssetUSDVolumeUpdate|null|undefined} usdVolumeUpdate
+         * @memberof ProtobufMarkets.AssetUpdateMessage
+         * @instance
+         */
+        AssetUpdateMessage.prototype.usdVolumeUpdate = null;
+
+        // OneOf field names bound to virtual getters and setters
+        var $oneOfFields;
+
+        /**
+         * AssetUpdateMessage Update.
+         * @member {"usdVolumeUpdate"|undefined} Update
+         * @memberof ProtobufMarkets.AssetUpdateMessage
+         * @instance
+         */
+        Object.defineProperty(AssetUpdateMessage.prototype, "Update", {
+            get: $util.oneOfGetter($oneOfFields = ["usdVolumeUpdate"]),
+            set: $util.oneOfSetter($oneOfFields)
+        });
+
+        /**
+         * Creates a new AssetUpdateMessage instance using the specified properties.
+         * @function create
+         * @memberof ProtobufMarkets.AssetUpdateMessage
+         * @static
+         * @param {ProtobufMarkets.IAssetUpdateMessage=} [properties] Properties to set
+         * @returns {ProtobufMarkets.AssetUpdateMessage} AssetUpdateMessage instance
+         */
+        AssetUpdateMessage.create = function create(properties) {
+            return new AssetUpdateMessage(properties);
+        };
+
+        /**
+         * Encodes the specified AssetUpdateMessage message. Does not implicitly {@link ProtobufMarkets.AssetUpdateMessage.verify|verify} messages.
+         * @function encode
+         * @memberof ProtobufMarkets.AssetUpdateMessage
+         * @static
+         * @param {ProtobufMarkets.IAssetUpdateMessage} message AssetUpdateMessage message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+        AssetUpdateMessage.encode = function encode(message, writer) {
+            if (!writer)
+                writer = $Writer.create();
+            if (message.asset != null && message.hasOwnProperty("asset"))
+                writer.uint32(/* id 1, wireType 0 =*/8).int32(message.asset);
+            if (message.usdVolumeUpdate != null && message.hasOwnProperty("usdVolumeUpdate"))
+                $root.ProtobufMarkets.AssetUSDVolumeUpdate.encode(message.usdVolumeUpdate, writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
+            return writer;
+        };
+
+        /**
+         * Encodes the specified AssetUpdateMessage message, length delimited. Does not implicitly {@link ProtobufMarkets.AssetUpdateMessage.verify|verify} messages.
+         * @function encodeDelimited
+         * @memberof ProtobufMarkets.AssetUpdateMessage
+         * @static
+         * @param {ProtobufMarkets.IAssetUpdateMessage} message AssetUpdateMessage message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+        AssetUpdateMessage.encodeDelimited = function encodeDelimited(message, writer) {
+            return this.encode(message, writer).ldelim();
+        };
+
+        /**
+         * Decodes an AssetUpdateMessage message from the specified reader or buffer.
+         * @function decode
+         * @memberof ProtobufMarkets.AssetUpdateMessage
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @param {number} [length] Message length if known beforehand
+         * @returns {ProtobufMarkets.AssetUpdateMessage} AssetUpdateMessage
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        AssetUpdateMessage.decode = function decode(reader, length) {
+            if (!(reader instanceof $Reader))
+                reader = $Reader.create(reader);
+            var end = length === undefined ? reader.len : reader.pos + length, message = new $root.ProtobufMarkets.AssetUpdateMessage();
+            while (reader.pos < end) {
+                var tag = reader.uint32();
+                switch (tag >>> 3) {
+                case 1:
+                    message.asset = reader.int32();
+                    break;
+                case 2:
+                    message.usdVolumeUpdate = $root.ProtobufMarkets.AssetUSDVolumeUpdate.decode(reader, reader.uint32());
+                    break;
+                default:
+                    reader.skipType(tag & 7);
+                    break;
+                }
+            }
+            return message;
+        };
+
+        /**
+         * Decodes an AssetUpdateMessage message from the specified reader or buffer, length delimited.
+         * @function decodeDelimited
+         * @memberof ProtobufMarkets.AssetUpdateMessage
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @returns {ProtobufMarkets.AssetUpdateMessage} AssetUpdateMessage
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        AssetUpdateMessage.decodeDelimited = function decodeDelimited(reader) {
+            if (!(reader instanceof $Reader))
+                reader = new $Reader(reader);
+            return this.decode(reader, reader.uint32());
+        };
+
+        /**
+         * Verifies an AssetUpdateMessage message.
+         * @function verify
+         * @memberof ProtobufMarkets.AssetUpdateMessage
+         * @static
+         * @param {Object.<string,*>} message Plain object to verify
+         * @returns {string|null} `null` if valid, otherwise the reason why it is not
+         */
+        AssetUpdateMessage.verify = function verify(message) {
+            if (typeof message !== "object" || message === null)
+                return "object expected";
+            var properties = {};
+            if (message.asset != null && message.hasOwnProperty("asset"))
+                if (!$util.isInteger(message.asset))
+                    return "asset: integer expected";
+            if (message.usdVolumeUpdate != null && message.hasOwnProperty("usdVolumeUpdate")) {
+                properties.Update = 1;
+                {
+                    var error = $root.ProtobufMarkets.AssetUSDVolumeUpdate.verify(message.usdVolumeUpdate);
+                    if (error)
+                        return "usdVolumeUpdate." + error;
+                }
+            }
+            return null;
+        };
+
+        /**
+         * Creates an AssetUpdateMessage message from a plain object. Also converts values to their respective internal types.
+         * @function fromObject
+         * @memberof ProtobufMarkets.AssetUpdateMessage
+         * @static
+         * @param {Object.<string,*>} object Plain object
+         * @returns {ProtobufMarkets.AssetUpdateMessage} AssetUpdateMessage
+         */
+        AssetUpdateMessage.fromObject = function fromObject(object) {
+            if (object instanceof $root.ProtobufMarkets.AssetUpdateMessage)
+                return object;
+            var message = new $root.ProtobufMarkets.AssetUpdateMessage();
+            if (object.asset != null)
+                message.asset = object.asset | 0;
+            if (object.usdVolumeUpdate != null) {
+                if (typeof object.usdVolumeUpdate !== "object")
+                    throw TypeError(".ProtobufMarkets.AssetUpdateMessage.usdVolumeUpdate: object expected");
+                message.usdVolumeUpdate = $root.ProtobufMarkets.AssetUSDVolumeUpdate.fromObject(object.usdVolumeUpdate);
+            }
+            return message;
+        };
+
+        /**
+         * Creates a plain object from an AssetUpdateMessage message. Also converts values to other types if specified.
+         * @function toObject
+         * @memberof ProtobufMarkets.AssetUpdateMessage
+         * @static
+         * @param {ProtobufMarkets.AssetUpdateMessage} message AssetUpdateMessage
+         * @param {$protobuf.IConversionOptions} [options] Conversion options
+         * @returns {Object.<string,*>} Plain object
+         */
+        AssetUpdateMessage.toObject = function toObject(message, options) {
+            if (!options)
+                options = {};
+            var object = {};
+            if (options.defaults)
+                object.asset = 0;
+            if (message.asset != null && message.hasOwnProperty("asset"))
+                object.asset = message.asset;
+            if (message.usdVolumeUpdate != null && message.hasOwnProperty("usdVolumeUpdate")) {
+                object.usdVolumeUpdate = $root.ProtobufMarkets.AssetUSDVolumeUpdate.toObject(message.usdVolumeUpdate, options);
+                if (options.oneofs)
+                    object.Update = "usdVolumeUpdate";
+            }
+            return object;
+        };
+
+        /**
+         * Converts this AssetUpdateMessage to JSON.
+         * @function toJSON
+         * @memberof ProtobufMarkets.AssetUpdateMessage
+         * @instance
+         * @returns {Object.<string,*>} JSON object
+         */
+        AssetUpdateMessage.prototype.toJSON = function toJSON() {
+            return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+        };
+
+        return AssetUpdateMessage;
+    })();
+
+    ProtobufMarkets.AssetUSDVolumeUpdate = (function() {
+
+        /**
+         * Properties of an AssetUSDVolumeUpdate.
+         * @memberof ProtobufMarkets
+         * @interface IAssetUSDVolumeUpdate
+         * @property {string|null} [volume] AssetUSDVolumeUpdate volume
+         */
+
+        /**
+         * Constructs a new AssetUSDVolumeUpdate.
+         * @memberof ProtobufMarkets
+         * @classdesc Represents an AssetUSDVolumeUpdate.
+         * @implements IAssetUSDVolumeUpdate
+         * @constructor
+         * @param {ProtobufMarkets.IAssetUSDVolumeUpdate=} [properties] Properties to set
+         */
+        function AssetUSDVolumeUpdate(properties) {
+            if (properties)
+                for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                    if (properties[keys[i]] != null)
+                        this[keys[i]] = properties[keys[i]];
+        }
+
+        /**
+         * AssetUSDVolumeUpdate volume.
+         * @member {string} volume
+         * @memberof ProtobufMarkets.AssetUSDVolumeUpdate
+         * @instance
+         */
+        AssetUSDVolumeUpdate.prototype.volume = "";
+
+        /**
+         * Creates a new AssetUSDVolumeUpdate instance using the specified properties.
+         * @function create
+         * @memberof ProtobufMarkets.AssetUSDVolumeUpdate
+         * @static
+         * @param {ProtobufMarkets.IAssetUSDVolumeUpdate=} [properties] Properties to set
+         * @returns {ProtobufMarkets.AssetUSDVolumeUpdate} AssetUSDVolumeUpdate instance
+         */
+        AssetUSDVolumeUpdate.create = function create(properties) {
+            return new AssetUSDVolumeUpdate(properties);
+        };
+
+        /**
+         * Encodes the specified AssetUSDVolumeUpdate message. Does not implicitly {@link ProtobufMarkets.AssetUSDVolumeUpdate.verify|verify} messages.
+         * @function encode
+         * @memberof ProtobufMarkets.AssetUSDVolumeUpdate
+         * @static
+         * @param {ProtobufMarkets.IAssetUSDVolumeUpdate} message AssetUSDVolumeUpdate message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+        AssetUSDVolumeUpdate.encode = function encode(message, writer) {
+            if (!writer)
+                writer = $Writer.create();
+            if (message.volume != null && message.hasOwnProperty("volume"))
+                writer.uint32(/* id 1, wireType 2 =*/10).string(message.volume);
+            return writer;
+        };
+
+        /**
+         * Encodes the specified AssetUSDVolumeUpdate message, length delimited. Does not implicitly {@link ProtobufMarkets.AssetUSDVolumeUpdate.verify|verify} messages.
+         * @function encodeDelimited
+         * @memberof ProtobufMarkets.AssetUSDVolumeUpdate
+         * @static
+         * @param {ProtobufMarkets.IAssetUSDVolumeUpdate} message AssetUSDVolumeUpdate message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+        AssetUSDVolumeUpdate.encodeDelimited = function encodeDelimited(message, writer) {
+            return this.encode(message, writer).ldelim();
+        };
+
+        /**
+         * Decodes an AssetUSDVolumeUpdate message from the specified reader or buffer.
+         * @function decode
+         * @memberof ProtobufMarkets.AssetUSDVolumeUpdate
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @param {number} [length] Message length if known beforehand
+         * @returns {ProtobufMarkets.AssetUSDVolumeUpdate} AssetUSDVolumeUpdate
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        AssetUSDVolumeUpdate.decode = function decode(reader, length) {
+            if (!(reader instanceof $Reader))
+                reader = $Reader.create(reader);
+            var end = length === undefined ? reader.len : reader.pos + length, message = new $root.ProtobufMarkets.AssetUSDVolumeUpdate();
+            while (reader.pos < end) {
+                var tag = reader.uint32();
+                switch (tag >>> 3) {
+                case 1:
+                    message.volume = reader.string();
+                    break;
+                default:
+                    reader.skipType(tag & 7);
+                    break;
+                }
+            }
+            return message;
+        };
+
+        /**
+         * Decodes an AssetUSDVolumeUpdate message from the specified reader or buffer, length delimited.
+         * @function decodeDelimited
+         * @memberof ProtobufMarkets.AssetUSDVolumeUpdate
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @returns {ProtobufMarkets.AssetUSDVolumeUpdate} AssetUSDVolumeUpdate
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        AssetUSDVolumeUpdate.decodeDelimited = function decodeDelimited(reader) {
+            if (!(reader instanceof $Reader))
+                reader = new $Reader(reader);
+            return this.decode(reader, reader.uint32());
+        };
+
+        /**
+         * Verifies an AssetUSDVolumeUpdate message.
+         * @function verify
+         * @memberof ProtobufMarkets.AssetUSDVolumeUpdate
+         * @static
+         * @param {Object.<string,*>} message Plain object to verify
+         * @returns {string|null} `null` if valid, otherwise the reason why it is not
+         */
+        AssetUSDVolumeUpdate.verify = function verify(message) {
+            if (typeof message !== "object" || message === null)
+                return "object expected";
+            if (message.volume != null && message.hasOwnProperty("volume"))
+                if (!$util.isString(message.volume))
+                    return "volume: string expected";
+            return null;
+        };
+
+        /**
+         * Creates an AssetUSDVolumeUpdate message from a plain object. Also converts values to their respective internal types.
+         * @function fromObject
+         * @memberof ProtobufMarkets.AssetUSDVolumeUpdate
+         * @static
+         * @param {Object.<string,*>} object Plain object
+         * @returns {ProtobufMarkets.AssetUSDVolumeUpdate} AssetUSDVolumeUpdate
+         */
+        AssetUSDVolumeUpdate.fromObject = function fromObject(object) {
+            if (object instanceof $root.ProtobufMarkets.AssetUSDVolumeUpdate)
+                return object;
+            var message = new $root.ProtobufMarkets.AssetUSDVolumeUpdate();
+            if (object.volume != null)
+                message.volume = String(object.volume);
+            return message;
+        };
+
+        /**
+         * Creates a plain object from an AssetUSDVolumeUpdate message. Also converts values to other types if specified.
+         * @function toObject
+         * @memberof ProtobufMarkets.AssetUSDVolumeUpdate
+         * @static
+         * @param {ProtobufMarkets.AssetUSDVolumeUpdate} message AssetUSDVolumeUpdate
+         * @param {$protobuf.IConversionOptions} [options] Conversion options
+         * @returns {Object.<string,*>} Plain object
+         */
+        AssetUSDVolumeUpdate.toObject = function toObject(message, options) {
+            if (!options)
+                options = {};
+            var object = {};
+            if (options.defaults)
+                object.volume = "";
+            if (message.volume != null && message.hasOwnProperty("volume"))
+                object.volume = message.volume;
+            return object;
+        };
+
+        /**
+         * Converts this AssetUSDVolumeUpdate to JSON.
+         * @function toJSON
+         * @memberof ProtobufMarkets.AssetUSDVolumeUpdate
+         * @instance
+         * @returns {Object.<string,*>} JSON object
+         */
+        AssetUSDVolumeUpdate.prototype.toJSON = function toJSON() {
+            return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+        };
+
+        return AssetUSDVolumeUpdate;
+    })();
+
     ProtobufMarkets.Market = (function() {
 
         /**
          * Properties of a Market.
          * @memberof ProtobufMarkets
          * @interface IMarket
-         * @property {string|null} [exchange] Market exchange
-         * @property {string|null} [currencyPair] Market currencyPair
          * @property {number|Long|null} [exchangeId] Market exchangeId
          * @property {number|Long|null} [currencyPairId] Market currencyPairId
          * @property {number|Long|null} [marketId] Market marketId
+         * @property {string|null} [exchange] Market exchange
+         * @property {string|null} [currencyPair] Market currencyPair
          */
 
         /**
@@ -2494,22 +2922,6 @@ $root.ProtobufMarkets = (function() {
                     if (properties[keys[i]] != null)
                         this[keys[i]] = properties[keys[i]];
         }
-
-        /**
-         * Market exchange.
-         * @member {string} exchange
-         * @memberof ProtobufMarkets.Market
-         * @instance
-         */
-        Market.prototype.exchange = "";
-
-        /**
-         * Market currencyPair.
-         * @member {string} currencyPair
-         * @memberof ProtobufMarkets.Market
-         * @instance
-         */
-        Market.prototype.currencyPair = "";
 
         /**
          * Market exchangeId.
@@ -2534,6 +2946,22 @@ $root.ProtobufMarkets = (function() {
          * @instance
          */
         Market.prototype.marketId = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+        /**
+         * Market exchange.
+         * @member {string} exchange
+         * @memberof ProtobufMarkets.Market
+         * @instance
+         */
+        Market.prototype.exchange = "";
+
+        /**
+         * Market currencyPair.
+         * @member {string} currencyPair
+         * @memberof ProtobufMarkets.Market
+         * @instance
+         */
+        Market.prototype.currencyPair = "";
 
         /**
          * Creates a new Market instance using the specified properties.
@@ -2603,12 +3031,6 @@ $root.ProtobufMarkets = (function() {
             while (reader.pos < end) {
                 var tag = reader.uint32();
                 switch (tag >>> 3) {
-                case 1:
-                    message.exchange = reader.string();
-                    break;
-                case 2:
-                    message.currencyPair = reader.string();
-                    break;
                 case 3:
                     message.exchangeId = reader.uint64();
                     break;
@@ -2617,6 +3039,12 @@ $root.ProtobufMarkets = (function() {
                     break;
                 case 5:
                     message.marketId = reader.uint64();
+                    break;
+                case 1:
+                    message.exchange = reader.string();
+                    break;
+                case 2:
+                    message.currencyPair = reader.string();
                     break;
                 default:
                     reader.skipType(tag & 7);
@@ -2653,12 +3081,6 @@ $root.ProtobufMarkets = (function() {
         Market.verify = function verify(message) {
             if (typeof message !== "object" || message === null)
                 return "object expected";
-            if (message.exchange != null && message.hasOwnProperty("exchange"))
-                if (!$util.isString(message.exchange))
-                    return "exchange: string expected";
-            if (message.currencyPair != null && message.hasOwnProperty("currencyPair"))
-                if (!$util.isString(message.currencyPair))
-                    return "currencyPair: string expected";
             if (message.exchangeId != null && message.hasOwnProperty("exchangeId"))
                 if (!$util.isInteger(message.exchangeId) && !(message.exchangeId && $util.isInteger(message.exchangeId.low) && $util.isInteger(message.exchangeId.high)))
                     return "exchangeId: integer|Long expected";
@@ -2668,6 +3090,12 @@ $root.ProtobufMarkets = (function() {
             if (message.marketId != null && message.hasOwnProperty("marketId"))
                 if (!$util.isInteger(message.marketId) && !(message.marketId && $util.isInteger(message.marketId.low) && $util.isInteger(message.marketId.high)))
                     return "marketId: integer|Long expected";
+            if (message.exchange != null && message.hasOwnProperty("exchange"))
+                if (!$util.isString(message.exchange))
+                    return "exchange: string expected";
+            if (message.currencyPair != null && message.hasOwnProperty("currencyPair"))
+                if (!$util.isString(message.currencyPair))
+                    return "currencyPair: string expected";
             return null;
         };
 
@@ -2683,10 +3111,6 @@ $root.ProtobufMarkets = (function() {
             if (object instanceof $root.ProtobufMarkets.Market)
                 return object;
             var message = new $root.ProtobufMarkets.Market();
-            if (object.exchange != null)
-                message.exchange = String(object.exchange);
-            if (object.currencyPair != null)
-                message.currencyPair = String(object.currencyPair);
             if (object.exchangeId != null)
                 if ($util.Long)
                     (message.exchangeId = $util.Long.fromValue(object.exchangeId)).unsigned = true;
@@ -2714,6 +3138,10 @@ $root.ProtobufMarkets = (function() {
                     message.marketId = object.marketId;
                 else if (typeof object.marketId === "object")
                     message.marketId = new $util.LongBits(object.marketId.low >>> 0, object.marketId.high >>> 0).toNumber(true);
+            if (object.exchange != null)
+                message.exchange = String(object.exchange);
+            if (object.currencyPair != null)
+                message.currencyPair = String(object.currencyPair);
             return message;
         };
 
@@ -2791,10 +3219,10 @@ $root.ProtobufMarkets = (function() {
          * Properties of an Order.
          * @memberof ProtobufMarkets
          * @interface IOrder
-         * @property {number|null} [price] Order price
-         * @property {number|null} [amount] Order amount
          * @property {string|null} [priceStr] Order priceStr
          * @property {string|null} [amountStr] Order amountStr
+         * @property {number|null} [price] Order price
+         * @property {number|null} [amount] Order amount
          */
 
         /**
@@ -2813,22 +3241,6 @@ $root.ProtobufMarkets = (function() {
         }
 
         /**
-         * Order price.
-         * @member {number} price
-         * @memberof ProtobufMarkets.Order
-         * @instance
-         */
-        Order.prototype.price = 0;
-
-        /**
-         * Order amount.
-         * @member {number} amount
-         * @memberof ProtobufMarkets.Order
-         * @instance
-         */
-        Order.prototype.amount = 0;
-
-        /**
          * Order priceStr.
          * @member {string} priceStr
          * @memberof ProtobufMarkets.Order
@@ -2843,6 +3255,22 @@ $root.ProtobufMarkets = (function() {
          * @instance
          */
         Order.prototype.amountStr = "";
+
+        /**
+         * Order price.
+         * @member {number} price
+         * @memberof ProtobufMarkets.Order
+         * @instance
+         */
+        Order.prototype.price = 0;
+
+        /**
+         * Order amount.
+         * @member {number} amount
+         * @memberof ProtobufMarkets.Order
+         * @instance
+         */
+        Order.prototype.amount = 0;
 
         /**
          * Creates a new Order instance using the specified properties.
@@ -2910,17 +3338,17 @@ $root.ProtobufMarkets = (function() {
             while (reader.pos < end) {
                 var tag = reader.uint32();
                 switch (tag >>> 3) {
-                case 1:
-                    message.price = reader.float();
-                    break;
-                case 2:
-                    message.amount = reader.float();
-                    break;
                 case 3:
                     message.priceStr = reader.string();
                     break;
                 case 4:
                     message.amountStr = reader.string();
+                    break;
+                case 1:
+                    message.price = reader.float();
+                    break;
+                case 2:
+                    message.amount = reader.float();
                     break;
                 default:
                     reader.skipType(tag & 7);
@@ -2957,18 +3385,18 @@ $root.ProtobufMarkets = (function() {
         Order.verify = function verify(message) {
             if (typeof message !== "object" || message === null)
                 return "object expected";
-            if (message.price != null && message.hasOwnProperty("price"))
-                if (typeof message.price !== "number")
-                    return "price: number expected";
-            if (message.amount != null && message.hasOwnProperty("amount"))
-                if (typeof message.amount !== "number")
-                    return "amount: number expected";
             if (message.priceStr != null && message.hasOwnProperty("priceStr"))
                 if (!$util.isString(message.priceStr))
                     return "priceStr: string expected";
             if (message.amountStr != null && message.hasOwnProperty("amountStr"))
                 if (!$util.isString(message.amountStr))
                     return "amountStr: string expected";
+            if (message.price != null && message.hasOwnProperty("price"))
+                if (typeof message.price !== "number")
+                    return "price: number expected";
+            if (message.amount != null && message.hasOwnProperty("amount"))
+                if (typeof message.amount !== "number")
+                    return "amount: number expected";
             return null;
         };
 
@@ -2984,14 +3412,14 @@ $root.ProtobufMarkets = (function() {
             if (object instanceof $root.ProtobufMarkets.Order)
                 return object;
             var message = new $root.ProtobufMarkets.Order();
-            if (object.price != null)
-                message.price = Number(object.price);
-            if (object.amount != null)
-                message.amount = Number(object.amount);
             if (object.priceStr != null)
                 message.priceStr = String(object.priceStr);
             if (object.amountStr != null)
                 message.amountStr = String(object.amountStr);
+            if (object.price != null)
+                message.price = Number(object.price);
+            if (object.amount != null)
+                message.amount = Number(object.amount);
             return message;
         };
 
@@ -3048,12 +3476,13 @@ $root.ProtobufMarkets = (function() {
          * @property {number|Long|null} [id] Trade id
          * @property {number|Long|null} [timestamp] Trade timestamp
          * @property {number|Long|null} [timestampMillis] Trade timestampMillis
+         * @property {number|Long|null} [timestampNano] Trade timestampNano
+         * @property {string|null} [priceStr] Trade priceStr
+         * @property {string|null} [amountStr] Trade amountStr
          * @property {number|null} [price] Trade price
          * @property {number|null} [amount] Trade amount
          * @property {number|null} [priceDouble] Trade priceDouble
          * @property {number|null} [amountDouble] Trade amountDouble
-         * @property {string|null} [priceStr] Trade priceStr
-         * @property {string|null} [amountStr] Trade amountStr
          */
 
         /**
@@ -3096,6 +3525,30 @@ $root.ProtobufMarkets = (function() {
         Trade.prototype.timestampMillis = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
 
         /**
+         * Trade timestampNano.
+         * @member {number|Long} timestampNano
+         * @memberof ProtobufMarkets.Trade
+         * @instance
+         */
+        Trade.prototype.timestampNano = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+        /**
+         * Trade priceStr.
+         * @member {string} priceStr
+         * @memberof ProtobufMarkets.Trade
+         * @instance
+         */
+        Trade.prototype.priceStr = "";
+
+        /**
+         * Trade amountStr.
+         * @member {string} amountStr
+         * @memberof ProtobufMarkets.Trade
+         * @instance
+         */
+        Trade.prototype.amountStr = "";
+
+        /**
          * Trade price.
          * @member {number} price
          * @memberof ProtobufMarkets.Trade
@@ -3126,22 +3579,6 @@ $root.ProtobufMarkets = (function() {
          * @instance
          */
         Trade.prototype.amountDouble = 0;
-
-        /**
-         * Trade priceStr.
-         * @member {string} priceStr
-         * @memberof ProtobufMarkets.Trade
-         * @instance
-         */
-        Trade.prototype.priceStr = "";
-
-        /**
-         * Trade amountStr.
-         * @member {string} amountStr
-         * @memberof ProtobufMarkets.Trade
-         * @instance
-         */
-        Trade.prototype.amountStr = "";
 
         /**
          * Creates a new Trade instance using the specified properties.
@@ -3185,6 +3622,8 @@ $root.ProtobufMarkets = (function() {
                 writer.uint32(/* id 8, wireType 2 =*/66).string(message.priceStr);
             if (message.amountStr != null && message.hasOwnProperty("amountStr"))
                 writer.uint32(/* id 9, wireType 2 =*/74).string(message.amountStr);
+            if (message.timestampNano != null && message.hasOwnProperty("timestampNano"))
+                writer.uint32(/* id 10, wireType 0 =*/80).int64(message.timestampNano);
             return writer;
         };
 
@@ -3228,6 +3667,15 @@ $root.ProtobufMarkets = (function() {
                 case 5:
                     message.timestampMillis = reader.int64();
                     break;
+                case 10:
+                    message.timestampNano = reader.int64();
+                    break;
+                case 8:
+                    message.priceStr = reader.string();
+                    break;
+                case 9:
+                    message.amountStr = reader.string();
+                    break;
                 case 3:
                     message.price = reader.float();
                     break;
@@ -3239,12 +3687,6 @@ $root.ProtobufMarkets = (function() {
                     break;
                 case 7:
                     message.amountDouble = reader.double();
-                    break;
-                case 8:
-                    message.priceStr = reader.string();
-                    break;
-                case 9:
-                    message.amountStr = reader.string();
                     break;
                 default:
                     reader.skipType(tag & 7);
@@ -3290,6 +3732,15 @@ $root.ProtobufMarkets = (function() {
             if (message.timestampMillis != null && message.hasOwnProperty("timestampMillis"))
                 if (!$util.isInteger(message.timestampMillis) && !(message.timestampMillis && $util.isInteger(message.timestampMillis.low) && $util.isInteger(message.timestampMillis.high)))
                     return "timestampMillis: integer|Long expected";
+            if (message.timestampNano != null && message.hasOwnProperty("timestampNano"))
+                if (!$util.isInteger(message.timestampNano) && !(message.timestampNano && $util.isInteger(message.timestampNano.low) && $util.isInteger(message.timestampNano.high)))
+                    return "timestampNano: integer|Long expected";
+            if (message.priceStr != null && message.hasOwnProperty("priceStr"))
+                if (!$util.isString(message.priceStr))
+                    return "priceStr: string expected";
+            if (message.amountStr != null && message.hasOwnProperty("amountStr"))
+                if (!$util.isString(message.amountStr))
+                    return "amountStr: string expected";
             if (message.price != null && message.hasOwnProperty("price"))
                 if (typeof message.price !== "number")
                     return "price: number expected";
@@ -3302,12 +3753,6 @@ $root.ProtobufMarkets = (function() {
             if (message.amountDouble != null && message.hasOwnProperty("amountDouble"))
                 if (typeof message.amountDouble !== "number")
                     return "amountDouble: number expected";
-            if (message.priceStr != null && message.hasOwnProperty("priceStr"))
-                if (!$util.isString(message.priceStr))
-                    return "priceStr: string expected";
-            if (message.amountStr != null && message.hasOwnProperty("amountStr"))
-                if (!$util.isString(message.amountStr))
-                    return "amountStr: string expected";
             return null;
         };
 
@@ -3350,6 +3795,19 @@ $root.ProtobufMarkets = (function() {
                     message.timestampMillis = object.timestampMillis;
                 else if (typeof object.timestampMillis === "object")
                     message.timestampMillis = new $util.LongBits(object.timestampMillis.low >>> 0, object.timestampMillis.high >>> 0).toNumber();
+            if (object.timestampNano != null)
+                if ($util.Long)
+                    (message.timestampNano = $util.Long.fromValue(object.timestampNano)).unsigned = false;
+                else if (typeof object.timestampNano === "string")
+                    message.timestampNano = parseInt(object.timestampNano, 10);
+                else if (typeof object.timestampNano === "number")
+                    message.timestampNano = object.timestampNano;
+                else if (typeof object.timestampNano === "object")
+                    message.timestampNano = new $util.LongBits(object.timestampNano.low >>> 0, object.timestampNano.high >>> 0).toNumber();
+            if (object.priceStr != null)
+                message.priceStr = String(object.priceStr);
+            if (object.amountStr != null)
+                message.amountStr = String(object.amountStr);
             if (object.price != null)
                 message.price = Number(object.price);
             if (object.amount != null)
@@ -3358,10 +3816,6 @@ $root.ProtobufMarkets = (function() {
                 message.priceDouble = Number(object.priceDouble);
             if (object.amountDouble != null)
                 message.amountDouble = Number(object.amountDouble);
-            if (object.priceStr != null)
-                message.priceStr = String(object.priceStr);
-            if (object.amountStr != null)
-                message.amountStr = String(object.amountStr);
             return message;
         };
 
@@ -3400,6 +3854,11 @@ $root.ProtobufMarkets = (function() {
                 object.amountDouble = 0;
                 object.priceStr = "";
                 object.amountStr = "";
+                if ($util.Long) {
+                    var long = new $util.Long(0, 0, false);
+                    object.timestampNano = options.longs === String ? long.toString() : options.longs === Number ? long.toNumber() : long;
+                } else
+                    object.timestampNano = options.longs === String ? "0" : 0;
             }
             if (message.id != null && message.hasOwnProperty("id"))
                 if (typeof message.id === "number")
@@ -3428,6 +3887,11 @@ $root.ProtobufMarkets = (function() {
                 object.priceStr = message.priceStr;
             if (message.amountStr != null && message.hasOwnProperty("amountStr"))
                 object.amountStr = message.amountStr;
+            if (message.timestampNano != null && message.hasOwnProperty("timestampNano"))
+                if (typeof message.timestampNano === "number")
+                    object.timestampNano = options.longs === String ? String(message.timestampNano) : message.timestampNano;
+                else
+                    object.timestampNano = options.longs === String ? $util.Long.prototype.toString.call(message.timestampNano) : options.longs === Number ? new $util.LongBits(message.timestampNano.low >>> 0, message.timestampNano.high >>> 0).toNumber() : message.timestampNano;
             return object;
         };
 
@@ -3894,11 +4358,11 @@ $root.ProtobufMarkets = (function() {
          * Properties of an OrderBookUpdate.
          * @memberof ProtobufMarkets
          * @interface IOrderBookUpdate
-         * @property {number|null} [aggregationModulus] OrderBookUpdate aggregationModulus
          * @property {string|null} [aggregationModulusStr] OrderBookUpdate aggregationModulusStr
          * @property {number|null} [seqNum] OrderBookUpdate seqNum
          * @property {Array.<ProtobufMarkets.IOrder>|null} [bids] OrderBookUpdate bids
          * @property {Array.<ProtobufMarkets.IOrder>|null} [asks] OrderBookUpdate asks
+         * @property {number|null} [aggregationModulus] OrderBookUpdate aggregationModulus
          */
 
         /**
@@ -3917,14 +4381,6 @@ $root.ProtobufMarkets = (function() {
                     if (properties[keys[i]] != null)
                         this[keys[i]] = properties[keys[i]];
         }
-
-        /**
-         * OrderBookUpdate aggregationModulus.
-         * @member {number} aggregationModulus
-         * @memberof ProtobufMarkets.OrderBookUpdate
-         * @instance
-         */
-        OrderBookUpdate.prototype.aggregationModulus = 0;
 
         /**
          * OrderBookUpdate aggregationModulusStr.
@@ -3957,6 +4413,14 @@ $root.ProtobufMarkets = (function() {
          * @instance
          */
         OrderBookUpdate.prototype.asks = $util.emptyArray;
+
+        /**
+         * OrderBookUpdate aggregationModulus.
+         * @member {number} aggregationModulus
+         * @memberof ProtobufMarkets.OrderBookUpdate
+         * @instance
+         */
+        OrderBookUpdate.prototype.aggregationModulus = 0;
 
         /**
          * Creates a new OrderBookUpdate instance using the specified properties.
@@ -4028,9 +4492,6 @@ $root.ProtobufMarkets = (function() {
             while (reader.pos < end) {
                 var tag = reader.uint32();
                 switch (tag >>> 3) {
-                case 3:
-                    message.aggregationModulus = reader.float();
-                    break;
                 case 4:
                     message.aggregationModulusStr = reader.string();
                     break;
@@ -4046,6 +4507,9 @@ $root.ProtobufMarkets = (function() {
                     if (!(message.asks && message.asks.length))
                         message.asks = [];
                     message.asks.push($root.ProtobufMarkets.Order.decode(reader, reader.uint32()));
+                    break;
+                case 3:
+                    message.aggregationModulus = reader.float();
                     break;
                 default:
                     reader.skipType(tag & 7);
@@ -4082,9 +4546,6 @@ $root.ProtobufMarkets = (function() {
         OrderBookUpdate.verify = function verify(message) {
             if (typeof message !== "object" || message === null)
                 return "object expected";
-            if (message.aggregationModulus != null && message.hasOwnProperty("aggregationModulus"))
-                if (typeof message.aggregationModulus !== "number")
-                    return "aggregationModulus: number expected";
             if (message.aggregationModulusStr != null && message.hasOwnProperty("aggregationModulusStr"))
                 if (!$util.isString(message.aggregationModulusStr))
                     return "aggregationModulusStr: string expected";
@@ -4109,6 +4570,9 @@ $root.ProtobufMarkets = (function() {
                         return "asks." + error;
                 }
             }
+            if (message.aggregationModulus != null && message.hasOwnProperty("aggregationModulus"))
+                if (typeof message.aggregationModulus !== "number")
+                    return "aggregationModulus: number expected";
             return null;
         };
 
@@ -4124,8 +4588,6 @@ $root.ProtobufMarkets = (function() {
             if (object instanceof $root.ProtobufMarkets.OrderBookUpdate)
                 return object;
             var message = new $root.ProtobufMarkets.OrderBookUpdate();
-            if (object.aggregationModulus != null)
-                message.aggregationModulus = Number(object.aggregationModulus);
             if (object.aggregationModulusStr != null)
                 message.aggregationModulusStr = String(object.aggregationModulusStr);
             if (object.seqNum != null)
@@ -4150,6 +4612,8 @@ $root.ProtobufMarkets = (function() {
                     message.asks[i] = $root.ProtobufMarkets.Order.fromObject(object.asks[i]);
                 }
             }
+            if (object.aggregationModulus != null)
+                message.aggregationModulus = Number(object.aggregationModulus);
             return message;
         };
 
@@ -5300,10 +5764,10 @@ $root.ProtobufMarkets = (function() {
          * @property {number|Long|null} [closetime] Interval closetime
          * @property {number|null} [period] Interval period
          * @property {ProtobufMarkets.Interval.IOHLC|null} [ohlc] Interval ohlc
-         * @property {number|null} [volumeBase] Interval volumeBase
-         * @property {number|null} [volumeQuote] Interval volumeQuote
          * @property {string|null} [volumeBaseStr] Interval volumeBaseStr
          * @property {string|null} [volumeQuoteStr] Interval volumeQuoteStr
+         * @property {number|null} [volumeBase] Interval volumeBase
+         * @property {number|null} [volumeQuote] Interval volumeQuote
          */
 
         /**
@@ -5346,22 +5810,6 @@ $root.ProtobufMarkets = (function() {
         Interval.prototype.ohlc = null;
 
         /**
-         * Interval volumeBase.
-         * @member {number} volumeBase
-         * @memberof ProtobufMarkets.Interval
-         * @instance
-         */
-        Interval.prototype.volumeBase = 0;
-
-        /**
-         * Interval volumeQuote.
-         * @member {number} volumeQuote
-         * @memberof ProtobufMarkets.Interval
-         * @instance
-         */
-        Interval.prototype.volumeQuote = 0;
-
-        /**
          * Interval volumeBaseStr.
          * @member {string} volumeBaseStr
          * @memberof ProtobufMarkets.Interval
@@ -5376,6 +5824,22 @@ $root.ProtobufMarkets = (function() {
          * @instance
          */
         Interval.prototype.volumeQuoteStr = "";
+
+        /**
+         * Interval volumeBase.
+         * @member {number} volumeBase
+         * @memberof ProtobufMarkets.Interval
+         * @instance
+         */
+        Interval.prototype.volumeBase = 0;
+
+        /**
+         * Interval volumeQuote.
+         * @member {number} volumeQuote
+         * @memberof ProtobufMarkets.Interval
+         * @instance
+         */
+        Interval.prototype.volumeQuote = 0;
 
         /**
          * Creates a new Interval instance using the specified properties.
@@ -5458,17 +5922,17 @@ $root.ProtobufMarkets = (function() {
                 case 2:
                     message.ohlc = $root.ProtobufMarkets.Interval.OHLC.decode(reader, reader.uint32());
                     break;
-                case 3:
-                    message.volumeBase = reader.float();
-                    break;
-                case 5:
-                    message.volumeQuote = reader.float();
-                    break;
                 case 6:
                     message.volumeBaseStr = reader.string();
                     break;
                 case 7:
                     message.volumeQuoteStr = reader.string();
+                    break;
+                case 3:
+                    message.volumeBase = reader.float();
+                    break;
+                case 5:
+                    message.volumeQuote = reader.float();
                     break;
                 default:
                     reader.skipType(tag & 7);
@@ -5516,18 +5980,18 @@ $root.ProtobufMarkets = (function() {
                 if (error)
                     return "ohlc." + error;
             }
-            if (message.volumeBase != null && message.hasOwnProperty("volumeBase"))
-                if (typeof message.volumeBase !== "number")
-                    return "volumeBase: number expected";
-            if (message.volumeQuote != null && message.hasOwnProperty("volumeQuote"))
-                if (typeof message.volumeQuote !== "number")
-                    return "volumeQuote: number expected";
             if (message.volumeBaseStr != null && message.hasOwnProperty("volumeBaseStr"))
                 if (!$util.isString(message.volumeBaseStr))
                     return "volumeBaseStr: string expected";
             if (message.volumeQuoteStr != null && message.hasOwnProperty("volumeQuoteStr"))
                 if (!$util.isString(message.volumeQuoteStr))
                     return "volumeQuoteStr: string expected";
+            if (message.volumeBase != null && message.hasOwnProperty("volumeBase"))
+                if (typeof message.volumeBase !== "number")
+                    return "volumeBase: number expected";
+            if (message.volumeQuote != null && message.hasOwnProperty("volumeQuote"))
+                if (typeof message.volumeQuote !== "number")
+                    return "volumeQuote: number expected";
             return null;
         };
 
@@ -5559,14 +6023,14 @@ $root.ProtobufMarkets = (function() {
                     throw TypeError(".ProtobufMarkets.Interval.ohlc: object expected");
                 message.ohlc = $root.ProtobufMarkets.Interval.OHLC.fromObject(object.ohlc);
             }
-            if (object.volumeBase != null)
-                message.volumeBase = Number(object.volumeBase);
-            if (object.volumeQuote != null)
-                message.volumeQuote = Number(object.volumeQuote);
             if (object.volumeBaseStr != null)
                 message.volumeBaseStr = String(object.volumeBaseStr);
             if (object.volumeQuoteStr != null)
                 message.volumeQuoteStr = String(object.volumeQuoteStr);
+            if (object.volumeBase != null)
+                message.volumeBase = Number(object.volumeBase);
+            if (object.volumeQuote != null)
+                message.volumeQuote = Number(object.volumeQuote);
             return message;
         };
 
@@ -5633,14 +6097,14 @@ $root.ProtobufMarkets = (function() {
              * Properties of a OHLC.
              * @memberof ProtobufMarkets.Interval
              * @interface IOHLC
-             * @property {number|null} [open] OHLC open
-             * @property {number|null} [high] OHLC high
-             * @property {number|null} [low] OHLC low
-             * @property {number|null} [close] OHLC close
              * @property {string|null} [openStr] OHLC openStr
              * @property {string|null} [highStr] OHLC highStr
              * @property {string|null} [lowStr] OHLC lowStr
              * @property {string|null} [closeStr] OHLC closeStr
+             * @property {number|null} [open] OHLC open
+             * @property {number|null} [high] OHLC high
+             * @property {number|null} [low] OHLC low
+             * @property {number|null} [close] OHLC close
              */
 
             /**
@@ -5657,38 +6121,6 @@ $root.ProtobufMarkets = (function() {
                         if (properties[keys[i]] != null)
                             this[keys[i]] = properties[keys[i]];
             }
-
-            /**
-             * OHLC open.
-             * @member {number} open
-             * @memberof ProtobufMarkets.Interval.OHLC
-             * @instance
-             */
-            OHLC.prototype.open = 0;
-
-            /**
-             * OHLC high.
-             * @member {number} high
-             * @memberof ProtobufMarkets.Interval.OHLC
-             * @instance
-             */
-            OHLC.prototype.high = 0;
-
-            /**
-             * OHLC low.
-             * @member {number} low
-             * @memberof ProtobufMarkets.Interval.OHLC
-             * @instance
-             */
-            OHLC.prototype.low = 0;
-
-            /**
-             * OHLC close.
-             * @member {number} close
-             * @memberof ProtobufMarkets.Interval.OHLC
-             * @instance
-             */
-            OHLC.prototype.close = 0;
 
             /**
              * OHLC openStr.
@@ -5721,6 +6153,38 @@ $root.ProtobufMarkets = (function() {
              * @instance
              */
             OHLC.prototype.closeStr = "";
+
+            /**
+             * OHLC open.
+             * @member {number} open
+             * @memberof ProtobufMarkets.Interval.OHLC
+             * @instance
+             */
+            OHLC.prototype.open = 0;
+
+            /**
+             * OHLC high.
+             * @member {number} high
+             * @memberof ProtobufMarkets.Interval.OHLC
+             * @instance
+             */
+            OHLC.prototype.high = 0;
+
+            /**
+             * OHLC low.
+             * @member {number} low
+             * @memberof ProtobufMarkets.Interval.OHLC
+             * @instance
+             */
+            OHLC.prototype.low = 0;
+
+            /**
+             * OHLC close.
+             * @member {number} close
+             * @memberof ProtobufMarkets.Interval.OHLC
+             * @instance
+             */
+            OHLC.prototype.close = 0;
 
             /**
              * Creates a new OHLC instance using the specified properties.
@@ -5796,18 +6260,6 @@ $root.ProtobufMarkets = (function() {
                 while (reader.pos < end) {
                     var tag = reader.uint32();
                     switch (tag >>> 3) {
-                    case 1:
-                        message.open = reader.float();
-                        break;
-                    case 2:
-                        message.high = reader.float();
-                        break;
-                    case 3:
-                        message.low = reader.float();
-                        break;
-                    case 4:
-                        message.close = reader.float();
-                        break;
                     case 5:
                         message.openStr = reader.string();
                         break;
@@ -5819,6 +6271,18 @@ $root.ProtobufMarkets = (function() {
                         break;
                     case 8:
                         message.closeStr = reader.string();
+                        break;
+                    case 1:
+                        message.open = reader.float();
+                        break;
+                    case 2:
+                        message.high = reader.float();
+                        break;
+                    case 3:
+                        message.low = reader.float();
+                        break;
+                    case 4:
+                        message.close = reader.float();
                         break;
                     default:
                         reader.skipType(tag & 7);
@@ -5855,18 +6319,6 @@ $root.ProtobufMarkets = (function() {
             OHLC.verify = function verify(message) {
                 if (typeof message !== "object" || message === null)
                     return "object expected";
-                if (message.open != null && message.hasOwnProperty("open"))
-                    if (typeof message.open !== "number")
-                        return "open: number expected";
-                if (message.high != null && message.hasOwnProperty("high"))
-                    if (typeof message.high !== "number")
-                        return "high: number expected";
-                if (message.low != null && message.hasOwnProperty("low"))
-                    if (typeof message.low !== "number")
-                        return "low: number expected";
-                if (message.close != null && message.hasOwnProperty("close"))
-                    if (typeof message.close !== "number")
-                        return "close: number expected";
                 if (message.openStr != null && message.hasOwnProperty("openStr"))
                     if (!$util.isString(message.openStr))
                         return "openStr: string expected";
@@ -5879,6 +6331,18 @@ $root.ProtobufMarkets = (function() {
                 if (message.closeStr != null && message.hasOwnProperty("closeStr"))
                     if (!$util.isString(message.closeStr))
                         return "closeStr: string expected";
+                if (message.open != null && message.hasOwnProperty("open"))
+                    if (typeof message.open !== "number")
+                        return "open: number expected";
+                if (message.high != null && message.hasOwnProperty("high"))
+                    if (typeof message.high !== "number")
+                        return "high: number expected";
+                if (message.low != null && message.hasOwnProperty("low"))
+                    if (typeof message.low !== "number")
+                        return "low: number expected";
+                if (message.close != null && message.hasOwnProperty("close"))
+                    if (typeof message.close !== "number")
+                        return "close: number expected";
                 return null;
             };
 
@@ -5894,14 +6358,6 @@ $root.ProtobufMarkets = (function() {
                 if (object instanceof $root.ProtobufMarkets.Interval.OHLC)
                     return object;
                 var message = new $root.ProtobufMarkets.Interval.OHLC();
-                if (object.open != null)
-                    message.open = Number(object.open);
-                if (object.high != null)
-                    message.high = Number(object.high);
-                if (object.low != null)
-                    message.low = Number(object.low);
-                if (object.close != null)
-                    message.close = Number(object.close);
                 if (object.openStr != null)
                     message.openStr = String(object.openStr);
                 if (object.highStr != null)
@@ -5910,6 +6366,14 @@ $root.ProtobufMarkets = (function() {
                     message.lowStr = String(object.lowStr);
                 if (object.closeStr != null)
                     message.closeStr = String(object.closeStr);
+                if (object.open != null)
+                    message.open = Number(object.open);
+                if (object.high != null)
+                    message.high = Number(object.high);
+                if (object.low != null)
+                    message.low = Number(object.low);
+                if (object.close != null)
+                    message.close = Number(object.close);
                 return message;
             };
 
@@ -6186,13 +6650,6 @@ $root.ProtobufMarkets = (function() {
          * Properties of a SummaryUpdate.
          * @memberof ProtobufMarkets
          * @interface ISummaryUpdate
-         * @property {number|null} [last] SummaryUpdate last
-         * @property {number|null} [high] SummaryUpdate high
-         * @property {number|null} [low] SummaryUpdate low
-         * @property {number|null} [volumeBase] SummaryUpdate volumeBase
-         * @property {number|null} [volumeQuote] SummaryUpdate volumeQuote
-         * @property {number|null} [changeAbsolute] SummaryUpdate changeAbsolute
-         * @property {number|null} [changePercent] SummaryUpdate changePercent
          * @property {string|null} [lastStr] SummaryUpdate lastStr
          * @property {string|null} [highStr] SummaryUpdate highStr
          * @property {string|null} [lowStr] SummaryUpdate lowStr
@@ -6201,6 +6658,13 @@ $root.ProtobufMarkets = (function() {
          * @property {string|null} [changeAbsoluteStr] SummaryUpdate changeAbsoluteStr
          * @property {string|null} [changePercentStr] SummaryUpdate changePercentStr
          * @property {number|null} [numTrades] SummaryUpdate numTrades
+         * @property {number|null} [last] SummaryUpdate last
+         * @property {number|null} [high] SummaryUpdate high
+         * @property {number|null} [low] SummaryUpdate low
+         * @property {number|null} [volumeBase] SummaryUpdate volumeBase
+         * @property {number|null} [volumeQuote] SummaryUpdate volumeQuote
+         * @property {number|null} [changeAbsolute] SummaryUpdate changeAbsolute
+         * @property {number|null} [changePercent] SummaryUpdate changePercent
          */
 
         /**
@@ -6217,62 +6681,6 @@ $root.ProtobufMarkets = (function() {
                     if (properties[keys[i]] != null)
                         this[keys[i]] = properties[keys[i]];
         }
-
-        /**
-         * SummaryUpdate last.
-         * @member {number} last
-         * @memberof ProtobufMarkets.SummaryUpdate
-         * @instance
-         */
-        SummaryUpdate.prototype.last = 0;
-
-        /**
-         * SummaryUpdate high.
-         * @member {number} high
-         * @memberof ProtobufMarkets.SummaryUpdate
-         * @instance
-         */
-        SummaryUpdate.prototype.high = 0;
-
-        /**
-         * SummaryUpdate low.
-         * @member {number} low
-         * @memberof ProtobufMarkets.SummaryUpdate
-         * @instance
-         */
-        SummaryUpdate.prototype.low = 0;
-
-        /**
-         * SummaryUpdate volumeBase.
-         * @member {number} volumeBase
-         * @memberof ProtobufMarkets.SummaryUpdate
-         * @instance
-         */
-        SummaryUpdate.prototype.volumeBase = 0;
-
-        /**
-         * SummaryUpdate volumeQuote.
-         * @member {number} volumeQuote
-         * @memberof ProtobufMarkets.SummaryUpdate
-         * @instance
-         */
-        SummaryUpdate.prototype.volumeQuote = 0;
-
-        /**
-         * SummaryUpdate changeAbsolute.
-         * @member {number} changeAbsolute
-         * @memberof ProtobufMarkets.SummaryUpdate
-         * @instance
-         */
-        SummaryUpdate.prototype.changeAbsolute = 0;
-
-        /**
-         * SummaryUpdate changePercent.
-         * @member {number} changePercent
-         * @memberof ProtobufMarkets.SummaryUpdate
-         * @instance
-         */
-        SummaryUpdate.prototype.changePercent = 0;
 
         /**
          * SummaryUpdate lastStr.
@@ -6337,6 +6745,62 @@ $root.ProtobufMarkets = (function() {
          * @instance
          */
         SummaryUpdate.prototype.numTrades = 0;
+
+        /**
+         * SummaryUpdate last.
+         * @member {number} last
+         * @memberof ProtobufMarkets.SummaryUpdate
+         * @instance
+         */
+        SummaryUpdate.prototype.last = 0;
+
+        /**
+         * SummaryUpdate high.
+         * @member {number} high
+         * @memberof ProtobufMarkets.SummaryUpdate
+         * @instance
+         */
+        SummaryUpdate.prototype.high = 0;
+
+        /**
+         * SummaryUpdate low.
+         * @member {number} low
+         * @memberof ProtobufMarkets.SummaryUpdate
+         * @instance
+         */
+        SummaryUpdate.prototype.low = 0;
+
+        /**
+         * SummaryUpdate volumeBase.
+         * @member {number} volumeBase
+         * @memberof ProtobufMarkets.SummaryUpdate
+         * @instance
+         */
+        SummaryUpdate.prototype.volumeBase = 0;
+
+        /**
+         * SummaryUpdate volumeQuote.
+         * @member {number} volumeQuote
+         * @memberof ProtobufMarkets.SummaryUpdate
+         * @instance
+         */
+        SummaryUpdate.prototype.volumeQuote = 0;
+
+        /**
+         * SummaryUpdate changeAbsolute.
+         * @member {number} changeAbsolute
+         * @memberof ProtobufMarkets.SummaryUpdate
+         * @instance
+         */
+        SummaryUpdate.prototype.changeAbsolute = 0;
+
+        /**
+         * SummaryUpdate changePercent.
+         * @member {number} changePercent
+         * @memberof ProtobufMarkets.SummaryUpdate
+         * @instance
+         */
+        SummaryUpdate.prototype.changePercent = 0;
 
         /**
          * Creates a new SummaryUpdate instance using the specified properties.
@@ -6426,27 +6890,6 @@ $root.ProtobufMarkets = (function() {
             while (reader.pos < end) {
                 var tag = reader.uint32();
                 switch (tag >>> 3) {
-                case 2:
-                    message.last = reader.float();
-                    break;
-                case 3:
-                    message.high = reader.float();
-                    break;
-                case 4:
-                    message.low = reader.float();
-                    break;
-                case 5:
-                    message.volumeBase = reader.float();
-                    break;
-                case 9:
-                    message.volumeQuote = reader.float();
-                    break;
-                case 6:
-                    message.changeAbsolute = reader.float();
-                    break;
-                case 7:
-                    message.changePercent = reader.float();
-                    break;
                 case 10:
                     message.lastStr = reader.string();
                     break;
@@ -6470,6 +6913,27 @@ $root.ProtobufMarkets = (function() {
                     break;
                 case 8:
                     message.numTrades = reader.int32();
+                    break;
+                case 2:
+                    message.last = reader.float();
+                    break;
+                case 3:
+                    message.high = reader.float();
+                    break;
+                case 4:
+                    message.low = reader.float();
+                    break;
+                case 5:
+                    message.volumeBase = reader.float();
+                    break;
+                case 9:
+                    message.volumeQuote = reader.float();
+                    break;
+                case 6:
+                    message.changeAbsolute = reader.float();
+                    break;
+                case 7:
+                    message.changePercent = reader.float();
                     break;
                 default:
                     reader.skipType(tag & 7);
@@ -6506,27 +6970,6 @@ $root.ProtobufMarkets = (function() {
         SummaryUpdate.verify = function verify(message) {
             if (typeof message !== "object" || message === null)
                 return "object expected";
-            if (message.last != null && message.hasOwnProperty("last"))
-                if (typeof message.last !== "number")
-                    return "last: number expected";
-            if (message.high != null && message.hasOwnProperty("high"))
-                if (typeof message.high !== "number")
-                    return "high: number expected";
-            if (message.low != null && message.hasOwnProperty("low"))
-                if (typeof message.low !== "number")
-                    return "low: number expected";
-            if (message.volumeBase != null && message.hasOwnProperty("volumeBase"))
-                if (typeof message.volumeBase !== "number")
-                    return "volumeBase: number expected";
-            if (message.volumeQuote != null && message.hasOwnProperty("volumeQuote"))
-                if (typeof message.volumeQuote !== "number")
-                    return "volumeQuote: number expected";
-            if (message.changeAbsolute != null && message.hasOwnProperty("changeAbsolute"))
-                if (typeof message.changeAbsolute !== "number")
-                    return "changeAbsolute: number expected";
-            if (message.changePercent != null && message.hasOwnProperty("changePercent"))
-                if (typeof message.changePercent !== "number")
-                    return "changePercent: number expected";
             if (message.lastStr != null && message.hasOwnProperty("lastStr"))
                 if (!$util.isString(message.lastStr))
                     return "lastStr: string expected";
@@ -6551,6 +6994,27 @@ $root.ProtobufMarkets = (function() {
             if (message.numTrades != null && message.hasOwnProperty("numTrades"))
                 if (!$util.isInteger(message.numTrades))
                     return "numTrades: integer expected";
+            if (message.last != null && message.hasOwnProperty("last"))
+                if (typeof message.last !== "number")
+                    return "last: number expected";
+            if (message.high != null && message.hasOwnProperty("high"))
+                if (typeof message.high !== "number")
+                    return "high: number expected";
+            if (message.low != null && message.hasOwnProperty("low"))
+                if (typeof message.low !== "number")
+                    return "low: number expected";
+            if (message.volumeBase != null && message.hasOwnProperty("volumeBase"))
+                if (typeof message.volumeBase !== "number")
+                    return "volumeBase: number expected";
+            if (message.volumeQuote != null && message.hasOwnProperty("volumeQuote"))
+                if (typeof message.volumeQuote !== "number")
+                    return "volumeQuote: number expected";
+            if (message.changeAbsolute != null && message.hasOwnProperty("changeAbsolute"))
+                if (typeof message.changeAbsolute !== "number")
+                    return "changeAbsolute: number expected";
+            if (message.changePercent != null && message.hasOwnProperty("changePercent"))
+                if (typeof message.changePercent !== "number")
+                    return "changePercent: number expected";
             return null;
         };
 
@@ -6566,20 +7030,6 @@ $root.ProtobufMarkets = (function() {
             if (object instanceof $root.ProtobufMarkets.SummaryUpdate)
                 return object;
             var message = new $root.ProtobufMarkets.SummaryUpdate();
-            if (object.last != null)
-                message.last = Number(object.last);
-            if (object.high != null)
-                message.high = Number(object.high);
-            if (object.low != null)
-                message.low = Number(object.low);
-            if (object.volumeBase != null)
-                message.volumeBase = Number(object.volumeBase);
-            if (object.volumeQuote != null)
-                message.volumeQuote = Number(object.volumeQuote);
-            if (object.changeAbsolute != null)
-                message.changeAbsolute = Number(object.changeAbsolute);
-            if (object.changePercent != null)
-                message.changePercent = Number(object.changePercent);
             if (object.lastStr != null)
                 message.lastStr = String(object.lastStr);
             if (object.highStr != null)
@@ -6596,6 +7046,20 @@ $root.ProtobufMarkets = (function() {
                 message.changePercentStr = String(object.changePercentStr);
             if (object.numTrades != null)
                 message.numTrades = object.numTrades | 0;
+            if (object.last != null)
+                message.last = Number(object.last);
+            if (object.high != null)
+                message.high = Number(object.high);
+            if (object.low != null)
+                message.low = Number(object.low);
+            if (object.volumeBase != null)
+                message.volumeBase = Number(object.volumeBase);
+            if (object.volumeQuote != null)
+                message.volumeQuote = Number(object.volumeQuote);
+            if (object.changeAbsolute != null)
+                message.changeAbsolute = Number(object.changeAbsolute);
+            if (object.changePercent != null)
+                message.changePercent = Number(object.changePercent);
             return message;
         };
 
@@ -7924,6 +8388,7 @@ $root.ProtobufStream = (function() {
          * @property {ProtobufStream.IAuthenticationResult|null} [authenticationResult] StreamMessage authenticationResult
          * @property {ProtobufMarkets.IMarketUpdateMessage|null} [marketUpdate] StreamMessage marketUpdate
          * @property {ProtobufMarkets.IPairUpdateMessage|null} [pairUpdate] StreamMessage pairUpdate
+         * @property {ProtobufMarkets.IAssetUpdateMessage|null} [assetUpdate] StreamMessage assetUpdate
          */
 
         /**
@@ -7965,17 +8430,25 @@ $root.ProtobufStream = (function() {
          */
         StreamMessage.prototype.pairUpdate = null;
 
+        /**
+         * StreamMessage assetUpdate.
+         * @member {ProtobufMarkets.IAssetUpdateMessage|null|undefined} assetUpdate
+         * @memberof ProtobufStream.StreamMessage
+         * @instance
+         */
+        StreamMessage.prototype.assetUpdate = null;
+
         // OneOf field names bound to virtual getters and setters
         var $oneOfFields;
 
         /**
          * StreamMessage body.
-         * @member {"authenticationResult"|"marketUpdate"|"pairUpdate"|undefined} body
+         * @member {"authenticationResult"|"marketUpdate"|"pairUpdate"|"assetUpdate"|undefined} body
          * @memberof ProtobufStream.StreamMessage
          * @instance
          */
         Object.defineProperty(StreamMessage.prototype, "body", {
-            get: $util.oneOfGetter($oneOfFields = ["authenticationResult", "marketUpdate", "pairUpdate"]),
+            get: $util.oneOfGetter($oneOfFields = ["authenticationResult", "marketUpdate", "pairUpdate", "assetUpdate"]),
             set: $util.oneOfSetter($oneOfFields)
         });
 
@@ -8009,6 +8482,8 @@ $root.ProtobufStream = (function() {
                 $root.ProtobufMarkets.MarketUpdateMessage.encode(message.marketUpdate, writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
             if (message.pairUpdate != null && message.hasOwnProperty("pairUpdate"))
                 $root.ProtobufMarkets.PairUpdateMessage.encode(message.pairUpdate, writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
+            if (message.assetUpdate != null && message.hasOwnProperty("assetUpdate"))
+                $root.ProtobufMarkets.AssetUpdateMessage.encode(message.assetUpdate, writer.uint32(/* id 4, wireType 2 =*/34).fork()).ldelim();
             return writer;
         };
 
@@ -8051,6 +8526,9 @@ $root.ProtobufStream = (function() {
                     break;
                 case 3:
                     message.pairUpdate = $root.ProtobufMarkets.PairUpdateMessage.decode(reader, reader.uint32());
+                    break;
+                case 4:
+                    message.assetUpdate = $root.ProtobufMarkets.AssetUpdateMessage.decode(reader, reader.uint32());
                     break;
                 default:
                     reader.skipType(tag & 7);
@@ -8116,6 +8594,16 @@ $root.ProtobufStream = (function() {
                         return "pairUpdate." + error;
                 }
             }
+            if (message.assetUpdate != null && message.hasOwnProperty("assetUpdate")) {
+                if (properties.body === 1)
+                    return "body: multiple values";
+                properties.body = 1;
+                {
+                    var error = $root.ProtobufMarkets.AssetUpdateMessage.verify(message.assetUpdate);
+                    if (error)
+                        return "assetUpdate." + error;
+                }
+            }
             return null;
         };
 
@@ -8145,6 +8633,11 @@ $root.ProtobufStream = (function() {
                 if (typeof object.pairUpdate !== "object")
                     throw TypeError(".ProtobufStream.StreamMessage.pairUpdate: object expected");
                 message.pairUpdate = $root.ProtobufMarkets.PairUpdateMessage.fromObject(object.pairUpdate);
+            }
+            if (object.assetUpdate != null) {
+                if (typeof object.assetUpdate !== "object")
+                    throw TypeError(".ProtobufStream.StreamMessage.assetUpdate: object expected");
+                message.assetUpdate = $root.ProtobufMarkets.AssetUpdateMessage.fromObject(object.assetUpdate);
             }
             return message;
         };
@@ -8176,6 +8669,11 @@ $root.ProtobufStream = (function() {
                 object.pairUpdate = $root.ProtobufMarkets.PairUpdateMessage.toObject(message.pairUpdate, options);
                 if (options.oneofs)
                     object.body = "pairUpdate";
+            }
+            if (message.assetUpdate != null && message.hasOwnProperty("assetUpdate")) {
+                object.assetUpdate = $root.ProtobufMarkets.AssetUpdateMessage.toObject(message.assetUpdate, options);
+                if (options.oneofs)
+                    object.body = "assetUpdate";
             }
             return object;
         };

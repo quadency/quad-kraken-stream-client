@@ -472,7 +472,8 @@ export namespace ProtobufClient {
             UNKNOWN = 0,
             GOLANG_SDK = 1,
             JAVASCRIPT_SDK = 2,
-            NODE_SDK = 3
+            NODE_SDK = 3,
+            CW_WEB = 4
         }
     }
 
@@ -972,14 +973,197 @@ export namespace ProtobufClient {
 /** Namespace ProtobufMarkets. */
 export namespace ProtobufMarkets {
 
+    /** Properties of an AssetUpdateMessage. */
+    interface IAssetUpdateMessage {
+
+        /** AssetUpdateMessage asset */
+        asset?: (number|null);
+
+        /** AssetUpdateMessage usdVolumeUpdate */
+        usdVolumeUpdate?: (ProtobufMarkets.IAssetUSDVolumeUpdate|null);
+    }
+
+    /** Represents an AssetUpdateMessage. */
+    class AssetUpdateMessage implements IAssetUpdateMessage {
+
+        /**
+         * Constructs a new AssetUpdateMessage.
+         * @param [properties] Properties to set
+         */
+        constructor(properties?: ProtobufMarkets.IAssetUpdateMessage);
+
+        /** AssetUpdateMessage asset. */
+        public asset: number;
+
+        /** AssetUpdateMessage usdVolumeUpdate. */
+        public usdVolumeUpdate?: (ProtobufMarkets.IAssetUSDVolumeUpdate|null);
+
+        /** AssetUpdateMessage Update. */
+        public Update?: "usdVolumeUpdate";
+
+        /**
+         * Creates a new AssetUpdateMessage instance using the specified properties.
+         * @param [properties] Properties to set
+         * @returns AssetUpdateMessage instance
+         */
+        public static create(properties?: ProtobufMarkets.IAssetUpdateMessage): ProtobufMarkets.AssetUpdateMessage;
+
+        /**
+         * Encodes the specified AssetUpdateMessage message. Does not implicitly {@link ProtobufMarkets.AssetUpdateMessage.verify|verify} messages.
+         * @param message AssetUpdateMessage message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encode(message: ProtobufMarkets.IAssetUpdateMessage, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Encodes the specified AssetUpdateMessage message, length delimited. Does not implicitly {@link ProtobufMarkets.AssetUpdateMessage.verify|verify} messages.
+         * @param message AssetUpdateMessage message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encodeDelimited(message: ProtobufMarkets.IAssetUpdateMessage, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Decodes an AssetUpdateMessage message from the specified reader or buffer.
+         * @param reader Reader or buffer to decode from
+         * @param [length] Message length if known beforehand
+         * @returns AssetUpdateMessage
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): ProtobufMarkets.AssetUpdateMessage;
+
+        /**
+         * Decodes an AssetUpdateMessage message from the specified reader or buffer, length delimited.
+         * @param reader Reader or buffer to decode from
+         * @returns AssetUpdateMessage
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): ProtobufMarkets.AssetUpdateMessage;
+
+        /**
+         * Verifies an AssetUpdateMessage message.
+         * @param message Plain object to verify
+         * @returns `null` if valid, otherwise the reason why it is not
+         */
+        public static verify(message: { [k: string]: any }): (string|null);
+
+        /**
+         * Creates an AssetUpdateMessage message from a plain object. Also converts values to their respective internal types.
+         * @param object Plain object
+         * @returns AssetUpdateMessage
+         */
+        public static fromObject(object: { [k: string]: any }): ProtobufMarkets.AssetUpdateMessage;
+
+        /**
+         * Creates a plain object from an AssetUpdateMessage message. Also converts values to other types if specified.
+         * @param message AssetUpdateMessage
+         * @param [options] Conversion options
+         * @returns Plain object
+         */
+        public static toObject(message: ProtobufMarkets.AssetUpdateMessage, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+        /**
+         * Converts this AssetUpdateMessage to JSON.
+         * @returns JSON object
+         */
+        public toJSON(): { [k: string]: any };
+    }
+
+    /** Properties of an AssetUSDVolumeUpdate. */
+    interface IAssetUSDVolumeUpdate {
+
+        /** AssetUSDVolumeUpdate volume */
+        volume?: (string|null);
+    }
+
+    /** Represents an AssetUSDVolumeUpdate. */
+    class AssetUSDVolumeUpdate implements IAssetUSDVolumeUpdate {
+
+        /**
+         * Constructs a new AssetUSDVolumeUpdate.
+         * @param [properties] Properties to set
+         */
+        constructor(properties?: ProtobufMarkets.IAssetUSDVolumeUpdate);
+
+        /** AssetUSDVolumeUpdate volume. */
+        public volume: string;
+
+        /**
+         * Creates a new AssetUSDVolumeUpdate instance using the specified properties.
+         * @param [properties] Properties to set
+         * @returns AssetUSDVolumeUpdate instance
+         */
+        public static create(properties?: ProtobufMarkets.IAssetUSDVolumeUpdate): ProtobufMarkets.AssetUSDVolumeUpdate;
+
+        /**
+         * Encodes the specified AssetUSDVolumeUpdate message. Does not implicitly {@link ProtobufMarkets.AssetUSDVolumeUpdate.verify|verify} messages.
+         * @param message AssetUSDVolumeUpdate message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encode(message: ProtobufMarkets.IAssetUSDVolumeUpdate, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Encodes the specified AssetUSDVolumeUpdate message, length delimited. Does not implicitly {@link ProtobufMarkets.AssetUSDVolumeUpdate.verify|verify} messages.
+         * @param message AssetUSDVolumeUpdate message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encodeDelimited(message: ProtobufMarkets.IAssetUSDVolumeUpdate, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Decodes an AssetUSDVolumeUpdate message from the specified reader or buffer.
+         * @param reader Reader or buffer to decode from
+         * @param [length] Message length if known beforehand
+         * @returns AssetUSDVolumeUpdate
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): ProtobufMarkets.AssetUSDVolumeUpdate;
+
+        /**
+         * Decodes an AssetUSDVolumeUpdate message from the specified reader or buffer, length delimited.
+         * @param reader Reader or buffer to decode from
+         * @returns AssetUSDVolumeUpdate
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): ProtobufMarkets.AssetUSDVolumeUpdate;
+
+        /**
+         * Verifies an AssetUSDVolumeUpdate message.
+         * @param message Plain object to verify
+         * @returns `null` if valid, otherwise the reason why it is not
+         */
+        public static verify(message: { [k: string]: any }): (string|null);
+
+        /**
+         * Creates an AssetUSDVolumeUpdate message from a plain object. Also converts values to their respective internal types.
+         * @param object Plain object
+         * @returns AssetUSDVolumeUpdate
+         */
+        public static fromObject(object: { [k: string]: any }): ProtobufMarkets.AssetUSDVolumeUpdate;
+
+        /**
+         * Creates a plain object from an AssetUSDVolumeUpdate message. Also converts values to other types if specified.
+         * @param message AssetUSDVolumeUpdate
+         * @param [options] Conversion options
+         * @returns Plain object
+         */
+        public static toObject(message: ProtobufMarkets.AssetUSDVolumeUpdate, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+        /**
+         * Converts this AssetUSDVolumeUpdate to JSON.
+         * @returns JSON object
+         */
+        public toJSON(): { [k: string]: any };
+    }
+
     /** Properties of a Market. */
     interface IMarket {
-
-        /** Market exchange */
-        exchange?: (string|null);
-
-        /** Market currencyPair */
-        currencyPair?: (string|null);
 
         /** Market exchangeId */
         exchangeId?: (number|Long|null);
@@ -989,6 +1173,12 @@ export namespace ProtobufMarkets {
 
         /** Market marketId */
         marketId?: (number|Long|null);
+
+        /** Market exchange */
+        exchange?: (string|null);
+
+        /** Market currencyPair */
+        currencyPair?: (string|null);
     }
 
     /** Represents a Market. */
@@ -1000,12 +1190,6 @@ export namespace ProtobufMarkets {
          */
         constructor(properties?: ProtobufMarkets.IMarket);
 
-        /** Market exchange. */
-        public exchange: string;
-
-        /** Market currencyPair. */
-        public currencyPair: string;
-
         /** Market exchangeId. */
         public exchangeId: (number|Long);
 
@@ -1014,6 +1198,12 @@ export namespace ProtobufMarkets {
 
         /** Market marketId. */
         public marketId: (number|Long);
+
+        /** Market exchange. */
+        public exchange: string;
+
+        /** Market currencyPair. */
+        public currencyPair: string;
 
         /**
          * Creates a new Market instance using the specified properties.
@@ -1089,17 +1279,17 @@ export namespace ProtobufMarkets {
     /** Properties of an Order. */
     interface IOrder {
 
-        /** Order price */
-        price?: (number|null);
-
-        /** Order amount */
-        amount?: (number|null);
-
         /** Order priceStr */
         priceStr?: (string|null);
 
         /** Order amountStr */
         amountStr?: (string|null);
+
+        /** Order price */
+        price?: (number|null);
+
+        /** Order amount */
+        amount?: (number|null);
     }
 
     /** Represents an Order. */
@@ -1111,17 +1301,17 @@ export namespace ProtobufMarkets {
          */
         constructor(properties?: ProtobufMarkets.IOrder);
 
-        /** Order price. */
-        public price: number;
-
-        /** Order amount. */
-        public amount: number;
-
         /** Order priceStr. */
         public priceStr: string;
 
         /** Order amountStr. */
         public amountStr: string;
+
+        /** Order price. */
+        public price: number;
+
+        /** Order amount. */
+        public amount: number;
 
         /**
          * Creates a new Order instance using the specified properties.
@@ -1206,6 +1396,15 @@ export namespace ProtobufMarkets {
         /** Trade timestampMillis */
         timestampMillis?: (number|Long|null);
 
+        /** Trade timestampNano */
+        timestampNano?: (number|Long|null);
+
+        /** Trade priceStr */
+        priceStr?: (string|null);
+
+        /** Trade amountStr */
+        amountStr?: (string|null);
+
         /** Trade price */
         price?: (number|null);
 
@@ -1217,12 +1416,6 @@ export namespace ProtobufMarkets {
 
         /** Trade amountDouble */
         amountDouble?: (number|null);
-
-        /** Trade priceStr */
-        priceStr?: (string|null);
-
-        /** Trade amountStr */
-        amountStr?: (string|null);
     }
 
     /** Represents a Trade. */
@@ -1243,6 +1436,15 @@ export namespace ProtobufMarkets {
         /** Trade timestampMillis. */
         public timestampMillis: (number|Long);
 
+        /** Trade timestampNano. */
+        public timestampNano: (number|Long);
+
+        /** Trade priceStr. */
+        public priceStr: string;
+
+        /** Trade amountStr. */
+        public amountStr: string;
+
         /** Trade price. */
         public price: number;
 
@@ -1254,12 +1456,6 @@ export namespace ProtobufMarkets {
 
         /** Trade amountDouble. */
         public amountDouble: number;
-
-        /** Trade priceStr. */
-        public priceStr: string;
-
-        /** Trade amountStr. */
-        public amountStr: string;
 
         /**
          * Creates a new Trade instance using the specified properties.
@@ -1470,9 +1666,6 @@ export namespace ProtobufMarkets {
     /** Properties of an OrderBookUpdate. */
     interface IOrderBookUpdate {
 
-        /** OrderBookUpdate aggregationModulus */
-        aggregationModulus?: (number|null);
-
         /** OrderBookUpdate aggregationModulusStr */
         aggregationModulusStr?: (string|null);
 
@@ -1484,6 +1677,9 @@ export namespace ProtobufMarkets {
 
         /** OrderBookUpdate asks */
         asks?: (ProtobufMarkets.IOrder[]|null);
+
+        /** OrderBookUpdate aggregationModulus */
+        aggregationModulus?: (number|null);
     }
 
     /** Represents an OrderBookUpdate. */
@@ -1494,9 +1690,6 @@ export namespace ProtobufMarkets {
          * @param [properties] Properties to set
          */
         constructor(properties?: ProtobufMarkets.IOrderBookUpdate);
-
-        /** OrderBookUpdate aggregationModulus. */
-        public aggregationModulus: number;
 
         /** OrderBookUpdate aggregationModulusStr. */
         public aggregationModulusStr: string;
@@ -1509,6 +1702,9 @@ export namespace ProtobufMarkets {
 
         /** OrderBookUpdate asks. */
         public asks: ProtobufMarkets.IOrder[];
+
+        /** OrderBookUpdate aggregationModulus. */
+        public aggregationModulus: number;
 
         /**
          * Creates a new OrderBookUpdate instance using the specified properties.
@@ -2010,17 +2206,17 @@ export namespace ProtobufMarkets {
         /** Interval ohlc */
         ohlc?: (ProtobufMarkets.Interval.IOHLC|null);
 
-        /** Interval volumeBase */
-        volumeBase?: (number|null);
-
-        /** Interval volumeQuote */
-        volumeQuote?: (number|null);
-
         /** Interval volumeBaseStr */
         volumeBaseStr?: (string|null);
 
         /** Interval volumeQuoteStr */
         volumeQuoteStr?: (string|null);
+
+        /** Interval volumeBase */
+        volumeBase?: (number|null);
+
+        /** Interval volumeQuote */
+        volumeQuote?: (number|null);
     }
 
     /** Represents an Interval. */
@@ -2041,17 +2237,17 @@ export namespace ProtobufMarkets {
         /** Interval ohlc. */
         public ohlc?: (ProtobufMarkets.Interval.IOHLC|null);
 
-        /** Interval volumeBase. */
-        public volumeBase: number;
-
-        /** Interval volumeQuote. */
-        public volumeQuote: number;
-
         /** Interval volumeBaseStr. */
         public volumeBaseStr: string;
 
         /** Interval volumeQuoteStr. */
         public volumeQuoteStr: string;
+
+        /** Interval volumeBase. */
+        public volumeBase: number;
+
+        /** Interval volumeQuote. */
+        public volumeQuote: number;
 
         /**
          * Creates a new Interval instance using the specified properties.
@@ -2129,18 +2325,6 @@ export namespace ProtobufMarkets {
         /** Properties of a OHLC. */
         interface IOHLC {
 
-            /** OHLC open */
-            open?: (number|null);
-
-            /** OHLC high */
-            high?: (number|null);
-
-            /** OHLC low */
-            low?: (number|null);
-
-            /** OHLC close */
-            close?: (number|null);
-
             /** OHLC openStr */
             openStr?: (string|null);
 
@@ -2152,6 +2336,18 @@ export namespace ProtobufMarkets {
 
             /** OHLC closeStr */
             closeStr?: (string|null);
+
+            /** OHLC open */
+            open?: (number|null);
+
+            /** OHLC high */
+            high?: (number|null);
+
+            /** OHLC low */
+            low?: (number|null);
+
+            /** OHLC close */
+            close?: (number|null);
         }
 
         /** Represents a OHLC. */
@@ -2162,18 +2358,6 @@ export namespace ProtobufMarkets {
              * @param [properties] Properties to set
              */
             constructor(properties?: ProtobufMarkets.Interval.IOHLC);
-
-            /** OHLC open. */
-            public open: number;
-
-            /** OHLC high. */
-            public high: number;
-
-            /** OHLC low. */
-            public low: number;
-
-            /** OHLC close. */
-            public close: number;
 
             /** OHLC openStr. */
             public openStr: string;
@@ -2186,6 +2370,18 @@ export namespace ProtobufMarkets {
 
             /** OHLC closeStr. */
             public closeStr: string;
+
+            /** OHLC open. */
+            public open: number;
+
+            /** OHLC high. */
+            public high: number;
+
+            /** OHLC low. */
+            public low: number;
+
+            /** OHLC close. */
+            public close: number;
 
             /**
              * Creates a new OHLC instance using the specified properties.
@@ -2352,27 +2548,6 @@ export namespace ProtobufMarkets {
     /** Properties of a SummaryUpdate. */
     interface ISummaryUpdate {
 
-        /** SummaryUpdate last */
-        last?: (number|null);
-
-        /** SummaryUpdate high */
-        high?: (number|null);
-
-        /** SummaryUpdate low */
-        low?: (number|null);
-
-        /** SummaryUpdate volumeBase */
-        volumeBase?: (number|null);
-
-        /** SummaryUpdate volumeQuote */
-        volumeQuote?: (number|null);
-
-        /** SummaryUpdate changeAbsolute */
-        changeAbsolute?: (number|null);
-
-        /** SummaryUpdate changePercent */
-        changePercent?: (number|null);
-
         /** SummaryUpdate lastStr */
         lastStr?: (string|null);
 
@@ -2396,6 +2571,27 @@ export namespace ProtobufMarkets {
 
         /** SummaryUpdate numTrades */
         numTrades?: (number|null);
+
+        /** SummaryUpdate last */
+        last?: (number|null);
+
+        /** SummaryUpdate high */
+        high?: (number|null);
+
+        /** SummaryUpdate low */
+        low?: (number|null);
+
+        /** SummaryUpdate volumeBase */
+        volumeBase?: (number|null);
+
+        /** SummaryUpdate volumeQuote */
+        volumeQuote?: (number|null);
+
+        /** SummaryUpdate changeAbsolute */
+        changeAbsolute?: (number|null);
+
+        /** SummaryUpdate changePercent */
+        changePercent?: (number|null);
     }
 
     /** Represents a SummaryUpdate. */
@@ -2406,27 +2602,6 @@ export namespace ProtobufMarkets {
          * @param [properties] Properties to set
          */
         constructor(properties?: ProtobufMarkets.ISummaryUpdate);
-
-        /** SummaryUpdate last. */
-        public last: number;
-
-        /** SummaryUpdate high. */
-        public high: number;
-
-        /** SummaryUpdate low. */
-        public low: number;
-
-        /** SummaryUpdate volumeBase. */
-        public volumeBase: number;
-
-        /** SummaryUpdate volumeQuote. */
-        public volumeQuote: number;
-
-        /** SummaryUpdate changeAbsolute. */
-        public changeAbsolute: number;
-
-        /** SummaryUpdate changePercent. */
-        public changePercent: number;
 
         /** SummaryUpdate lastStr. */
         public lastStr: string;
@@ -2451,6 +2626,27 @@ export namespace ProtobufMarkets {
 
         /** SummaryUpdate numTrades. */
         public numTrades: number;
+
+        /** SummaryUpdate last. */
+        public last: number;
+
+        /** SummaryUpdate high. */
+        public high: number;
+
+        /** SummaryUpdate low. */
+        public low: number;
+
+        /** SummaryUpdate volumeBase. */
+        public volumeBase: number;
+
+        /** SummaryUpdate volumeQuote. */
+        public volumeQuote: number;
+
+        /** SummaryUpdate changeAbsolute. */
+        public changeAbsolute: number;
+
+        /** SummaryUpdate changePercent. */
+        public changePercent: number;
 
         /**
          * Creates a new SummaryUpdate instance using the specified properties.
@@ -3045,6 +3241,9 @@ export namespace ProtobufStream {
 
         /** StreamMessage pairUpdate */
         pairUpdate?: (ProtobufMarkets.IPairUpdateMessage|null);
+
+        /** StreamMessage assetUpdate */
+        assetUpdate?: (ProtobufMarkets.IAssetUpdateMessage|null);
     }
 
     /** Represents a StreamMessage. */
@@ -3065,8 +3264,11 @@ export namespace ProtobufStream {
         /** StreamMessage pairUpdate. */
         public pairUpdate?: (ProtobufMarkets.IPairUpdateMessage|null);
 
+        /** StreamMessage assetUpdate. */
+        public assetUpdate?: (ProtobufMarkets.IAssetUpdateMessage|null);
+
         /** StreamMessage body. */
-        public body?: ("authenticationResult"|"marketUpdate"|"pairUpdate");
+        public body?: ("authenticationResult"|"marketUpdate"|"pairUpdate"|"assetUpdate");
 
         /**
          * Creates a new StreamMessage instance using the specified properties.

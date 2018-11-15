@@ -18,6 +18,7 @@ exports.ClientUnsubscribeMessage = ClientUnsubscribeMessage;
 // ProtobufMarkets
 root.loadSync(protoPath("markets", "market"));
 root.loadSync(protoPath("markets", "pair"));
+root.loadSync(protoPath("markets", "asset"));
 const MarketUpdateMessage = root.lookupType("ProtobufMarkets.MarketUpdateMessage");
 exports.MarketUpdateMessage = MarketUpdateMessage;
 const OrderBookUpdate = root.lookupType("ProtobufMarkets.OrderBookUpdate");
