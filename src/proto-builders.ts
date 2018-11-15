@@ -21,6 +21,7 @@ const ClientUnsubscribeMessage = root.lookupType(
 // ProtobufMarkets
 root.loadSync(protoPath("markets", "market"));
 root.loadSync(protoPath("markets", "pair"));
+root.loadSync(protoPath("markets", "asset"));
 const MarketUpdateMessage = root.lookupType(
   "ProtobufMarkets.MarketUpdateMessage"
 );
