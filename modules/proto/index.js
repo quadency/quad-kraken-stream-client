@@ -3473,7 +3473,7 @@ $root.ProtobufMarkets = (function() {
          * Properties of a Trade.
          * @memberof ProtobufMarkets
          * @interface ITrade
-         * @property {number|Long|null} [id] Trade id
+         * @property {string|null} [externalId] Trade externalId
          * @property {number|Long|null} [timestamp] Trade timestamp
          * @property {number|Long|null} [timestampMillis] Trade timestampMillis
          * @property {number|Long|null} [timestampNano] Trade timestampNano
@@ -3483,6 +3483,7 @@ $root.ProtobufMarkets = (function() {
          * @property {number|null} [amount] Trade amount
          * @property {number|null} [priceDouble] Trade priceDouble
          * @property {number|null} [amountDouble] Trade amountDouble
+         * @property {number|Long|null} [id] Trade id
          */
 
         /**
@@ -3501,12 +3502,12 @@ $root.ProtobufMarkets = (function() {
         }
 
         /**
-         * Trade id.
-         * @member {number|Long} id
+         * Trade externalId.
+         * @member {string} externalId
          * @memberof ProtobufMarkets.Trade
          * @instance
          */
-        Trade.prototype.id = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+        Trade.prototype.externalId = "";
 
         /**
          * Trade timestamp.
@@ -3581,6 +3582,14 @@ $root.ProtobufMarkets = (function() {
         Trade.prototype.amountDouble = 0;
 
         /**
+         * Trade id.
+         * @member {number|Long} id
+         * @memberof ProtobufMarkets.Trade
+         * @instance
+         */
+        Trade.prototype.id = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+        /**
          * Creates a new Trade instance using the specified properties.
          * @function create
          * @memberof ProtobufMarkets.Trade
@@ -3624,6 +3633,8 @@ $root.ProtobufMarkets = (function() {
                 writer.uint32(/* id 9, wireType 2 =*/74).string(message.amountStr);
             if (message.timestampNano != null && message.hasOwnProperty("timestampNano"))
                 writer.uint32(/* id 10, wireType 0 =*/80).int64(message.timestampNano);
+            if (message.externalId != null && message.hasOwnProperty("externalId"))
+                writer.uint32(/* id 11, wireType 2 =*/90).string(message.externalId);
             return writer;
         };
 
@@ -3658,8 +3669,8 @@ $root.ProtobufMarkets = (function() {
             while (reader.pos < end) {
                 var tag = reader.uint32();
                 switch (tag >>> 3) {
-                case 1:
-                    message.id = reader.int64();
+                case 11:
+                    message.externalId = reader.string();
                     break;
                 case 2:
                     message.timestamp = reader.int64();
@@ -3687,6 +3698,9 @@ $root.ProtobufMarkets = (function() {
                     break;
                 case 7:
                     message.amountDouble = reader.double();
+                    break;
+                case 1:
+                    message.id = reader.int64();
                     break;
                 default:
                     reader.skipType(tag & 7);
@@ -3723,9 +3737,9 @@ $root.ProtobufMarkets = (function() {
         Trade.verify = function verify(message) {
             if (typeof message !== "object" || message === null)
                 return "object expected";
-            if (message.id != null && message.hasOwnProperty("id"))
-                if (!$util.isInteger(message.id) && !(message.id && $util.isInteger(message.id.low) && $util.isInteger(message.id.high)))
-                    return "id: integer|Long expected";
+            if (message.externalId != null && message.hasOwnProperty("externalId"))
+                if (!$util.isString(message.externalId))
+                    return "externalId: string expected";
             if (message.timestamp != null && message.hasOwnProperty("timestamp"))
                 if (!$util.isInteger(message.timestamp) && !(message.timestamp && $util.isInteger(message.timestamp.low) && $util.isInteger(message.timestamp.high)))
                     return "timestamp: integer|Long expected";
@@ -3753,6 +3767,9 @@ $root.ProtobufMarkets = (function() {
             if (message.amountDouble != null && message.hasOwnProperty("amountDouble"))
                 if (typeof message.amountDouble !== "number")
                     return "amountDouble: number expected";
+            if (message.id != null && message.hasOwnProperty("id"))
+                if (!$util.isInteger(message.id) && !(message.id && $util.isInteger(message.id.low) && $util.isInteger(message.id.high)))
+                    return "id: integer|Long expected";
             return null;
         };
 
@@ -3768,15 +3785,8 @@ $root.ProtobufMarkets = (function() {
             if (object instanceof $root.ProtobufMarkets.Trade)
                 return object;
             var message = new $root.ProtobufMarkets.Trade();
-            if (object.id != null)
-                if ($util.Long)
-                    (message.id = $util.Long.fromValue(object.id)).unsigned = false;
-                else if (typeof object.id === "string")
-                    message.id = parseInt(object.id, 10);
-                else if (typeof object.id === "number")
-                    message.id = object.id;
-                else if (typeof object.id === "object")
-                    message.id = new $util.LongBits(object.id.low >>> 0, object.id.high >>> 0).toNumber();
+            if (object.externalId != null)
+                message.externalId = String(object.externalId);
             if (object.timestamp != null)
                 if ($util.Long)
                     (message.timestamp = $util.Long.fromValue(object.timestamp)).unsigned = false;
@@ -3816,6 +3826,15 @@ $root.ProtobufMarkets = (function() {
                 message.priceDouble = Number(object.priceDouble);
             if (object.amountDouble != null)
                 message.amountDouble = Number(object.amountDouble);
+            if (object.id != null)
+                if ($util.Long)
+                    (message.id = $util.Long.fromValue(object.id)).unsigned = false;
+                else if (typeof object.id === "string")
+                    message.id = parseInt(object.id, 10);
+                else if (typeof object.id === "number")
+                    message.id = object.id;
+                else if (typeof object.id === "object")
+                    message.id = new $util.LongBits(object.id.low >>> 0, object.id.high >>> 0).toNumber();
             return message;
         };
 
@@ -3859,6 +3878,7 @@ $root.ProtobufMarkets = (function() {
                     object.timestampNano = options.longs === String ? long.toString() : options.longs === Number ? long.toNumber() : long;
                 } else
                     object.timestampNano = options.longs === String ? "0" : 0;
+                object.externalId = "";
             }
             if (message.id != null && message.hasOwnProperty("id"))
                 if (typeof message.id === "number")
@@ -3892,6 +3912,8 @@ $root.ProtobufMarkets = (function() {
                     object.timestampNano = options.longs === String ? String(message.timestampNano) : message.timestampNano;
                 else
                     object.timestampNano = options.longs === String ? $util.Long.prototype.toString.call(message.timestampNano) : options.longs === Number ? new $util.LongBits(message.timestampNano.low >>> 0, message.timestampNano.high >>> 0).toNumber() : message.timestampNano;
+            if (message.externalId != null && message.hasOwnProperty("externalId"))
+                object.externalId = message.externalId;
             return object;
         };
 

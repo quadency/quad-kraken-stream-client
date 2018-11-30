@@ -1,6 +1,6 @@
 {
   "name": "cw-stream-client",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A library for managing connections to Cryptowatch Websocket Streaming API",
   "author": "Cryptowatch <infra@cryptowatch>",
   "homepage": "https://cryptowat.ch/docs/streaming-api",
@@ -29,7 +29,7 @@
   },
   "devDependencies": {
     "@types/jest": "^23.1.6",
-    "in-series": "0.0.4",
+    "in-series": "^0.0.4",
     "jest": "^23.4.1",
     "ts-jest": "^23.0.0",
     "typescript": "^2.9.2",

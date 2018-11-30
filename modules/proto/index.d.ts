@@ -1387,8 +1387,8 @@ export namespace ProtobufMarkets {
     /** Properties of a Trade. */
     interface ITrade {
 
-        /** Trade id */
-        id?: (number|Long|null);
+        /** Trade externalId */
+        externalId?: (string|null);
 
         /** Trade timestamp */
         timestamp?: (number|Long|null);
@@ -1416,6 +1416,9 @@ export namespace ProtobufMarkets {
 
         /** Trade amountDouble */
         amountDouble?: (number|null);
+
+        /** Trade id */
+        id?: (number|Long|null);
     }
 
     /** Represents a Trade. */
@@ -1427,8 +1430,8 @@ export namespace ProtobufMarkets {
          */
         constructor(properties?: ProtobufMarkets.ITrade);
 
-        /** Trade id. */
-        public id: (number|Long);
+        /** Trade externalId. */
+        public externalId: string;
 
         /** Trade timestamp. */
         public timestamp: (number|Long);
@@ -1456,6 +1459,9 @@ export namespace ProtobufMarkets {
 
         /** Trade amountDouble. */
         public amountDouble: number;
+
+        /** Trade id. */
+        public id: (number|Long);
 
         /**
          * Creates a new Trade instance using the specified properties.
