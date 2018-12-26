@@ -3,8 +3,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const big_js_1 = require("big.js");
 const crypto = require("crypto");
 const events_1 = require("events");
-const pjson = require("pjson");
 const WebSocket = require("ws");
+const axios_1 = require("axios");
 // Protobuf message constructors
 const proto_builders_1 = require("./proto-builders");
 // Protobuf message type definitions
@@ -51,6 +51,7 @@ const defaultOptions = {
     // and environment variables will be overwritten by settings passed to the constructor.
     apiKey: "",
     secretKey: "",
+    market: "",
     // A list of subscriptions to subscribe to on connection
     subscriptions: [],
     // Whether the library should reconnect automatically
@@ -73,7 +74,7 @@ class CWStreamClient extends events_1.EventEmitter {
     // Default to defaultOptions
     constructor(opts = defaultOptions) {
         super();
-        // Environment variables
+        // // Environment variables
         if (process.env.CW_API_KEY) {
             opts.apiKey = process.env.CW_API_KEY;
         }
@@ -86,12 +87,6 @@ class CWStreamClient extends events_1.EventEmitter {
         }
         // Merge supplied options with defaults
         this.session = Object.assign(defaultOptions, opts);
-        if (this.session.apiKey.length === 0) {
-            throw new Error(ERROR.MISSING_API_KEY);
-        }
-        if (this.session.secretKey.length === 0) {
-            throw new Error(ERROR.MISSING_SECRET_KEY);
-        }
         // Keep track of subscriptions in case we need to reconnect after the client
         // has called subscribe()
         this.subscriptionState = {};
@@ -208,23 +203,35 @@ class CWStreamClient extends events_1.EventEmitter {
         }, this.session.reconnectTimeout * 1000);
         this.emit(STATE.WAITING_TO_RECONNECT, this.session.reconnectTimeout);
     }
+    getIdentificationMessage() {
+        return proto_builders_1.ClientIdentificationMessage.create({
+            userAgent: 'Unknown user-agent',
+            revision: '46b7514904bbc1f44747c12bc3fb210adeec68d5',
+            integration: 'kraken',
+            locale: 'en',
+            subscriptions: this.subscriptions()
+        });
+    }
     authenticate() {
         this.emit(STATE.AUTHENTICATING);
-        // The client should never use their own nonce, this is only for testing
-        // purposes
-        const nonce = this.session.nonce ? this.session.nonce : this.getNonce();
-        const token = this.generateToken(nonce);
-        const authMsg = proto_builders_1.ClientMessage.create({
-            apiAuthentication: proto_builders_1.APIAuthenticationMessage.create({
-                apiKey: this.session.apiKey,
-                nonce,
-                source: proto_1.ProtobufClient.APIAuthenticationMessage.Source.NODE_SDK,
-                subscriptions: this.subscriptions(),
-                token,
-                version: pjson.version
-            })
+        const baseTokenUrl = 'https://trade.kraken.com/auth/cat?view=market&exchange=4';
+        const tokenUrl = this.session.market ? `${baseTokenUrl}&market=${this.session.market}` : baseTokenUrl;
+        axios_1.default.get(tokenUrl)
+            .then((response) => {
+            const { token, nonce, accessList } = response.data;
+            const authMsg = proto_builders_1.ClientMessage.create({
+                webAuthentication: proto_builders_1.WebAuthenticationMessage.create({
+                    identification: this.getIdentificationMessage(),
+                    token,
+                    nonce,
+                    accessList: accessList,
+                })
+            });
+            this.send(proto_builders_1.ClientMessage.encode(authMsg).finish());
+        })
+            .catch((e) => {
+            this.log("error", ERROR[e]);
         });
-        this.send(proto_builders_1.ClientMessage.encode(authMsg).finish());
     }
     /**
      * Gets current unix time in nanoseconds, as a string. The use of big.js is

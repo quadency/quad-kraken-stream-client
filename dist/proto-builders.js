@@ -15,6 +15,10 @@ const ClientSubscribeMessage = root.lookupType("ProtobufClient.ClientSubscribeMe
 exports.ClientSubscribeMessage = ClientSubscribeMessage;
 const ClientUnsubscribeMessage = root.lookupType("ProtobufClient.ClientUnsubscribeMessage");
 exports.ClientUnsubscribeMessage = ClientUnsubscribeMessage;
+const WebAuthenticationMessage = root.lookupType("ProtobufClient.WebAuthenticationMessage");
+exports.WebAuthenticationMessage = WebAuthenticationMessage;
+const ClientIdentificationMessage = root.lookupType("ProtobufClient.ClientIdentificationMessage");
+exports.ClientIdentificationMessage = ClientIdentificationMessage;
 // ProtobufMarkets
 root.loadSync(protoPath("markets", "market"));
 root.loadSync(protoPath("markets", "pair"));

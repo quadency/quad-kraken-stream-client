@@ -17,6 +17,12 @@ const ClientSubscribeMessage = root.lookupType(
 const ClientUnsubscribeMessage = root.lookupType(
   "ProtobufClient.ClientUnsubscribeMessage"
 );
+const WebAuthenticationMessage = root.lookupType(
+    "ProtobufClient.WebAuthenticationMessage"
+);
+const ClientIdentificationMessage = root.lookupType(
+    "ProtobufClient.ClientIdentificationMessage"
+);
 
 // ProtobufMarkets
 root.loadSync(protoPath("markets", "market"));
@@ -47,5 +53,7 @@ export {
   StreamMessage,
   PairUpdateMessage,
   PairVwapUpdate,
-  ProtobufClient
+  ProtobufClient,
+  WebAuthenticationMessage,
+  ClientIdentificationMessage,
 };
