@@ -7,7 +7,8 @@ import axios from 'axios';
 
 // Protobuf message constructors
 import {
-    APIAuthenticationMessage,
+    WebAuthenticationMessage,
+    ClientIdentificationMessage,
     AuthenticationResult,
     ClientMessage,
     ClientSubscribeMessage,
@@ -22,6 +23,7 @@ import {
     ProtobufMarkets,
     ProtobufStream
 } from "../modules/proto";
+import {Message} from "protobufjs";
 
 export interface IStreamOptions {
     url?: string;
@@ -128,10 +130,10 @@ export class CWStreamClient extends EventEmitter {
 
         // // Environment variables
         if (process.env.CW_API_KEY) {
-          opts.apiKey = process.env.CW_API_KEY;
+            opts.apiKey = process.env.CW_API_KEY;
         }
         if (process.env.CW_SECRET_KEY) {
-          opts.secretKey = process.env.CW_SECRET_KEY;
+            opts.secretKey = process.env.CW_SECRET_KEY;
         }
 
         // Set minimum reconnectTimeout of 1s if backoff=false
@@ -288,35 +290,41 @@ export class CWStreamClient extends EventEmitter {
         this.emit(STATE.WAITING_TO_RECONNECT, this.session.reconnectTimeout);
     }
 
+    private getIdentificationMessage(): Message {
+        return ClientIdentificationMessage.create({
+            userAgent: 'Unknown user-agent',
+            revision: '46b7514904bbc1f44747c12bc3fb210adeec68d5',
+            integration: 'kraken',
+            locale: 'en',
+            subscriptions: this.subscriptions()
+        });
+    }
+
     private authenticate(): void {
         this.emit(STATE.AUTHENTICATING);
         const baseTokenUrl = 'https://trade.kraken.com/auth/cat?view=market&exchange=4';
         const tokenUrl = this.session.market ? `baseTokenUrl&market=${this.session.market}` : baseTokenUrl;
         axios.get(tokenUrl)
             .then((response) => {
-                console.log('response', response.data);
-                // return response.json();
+                const {token, nonce, accessList} = response.data;
+
+                console.log('token', token);
+                console.log('nonce', nonce);
+                console.log('accessList', accessList);
+                const authMsg = ClientMessage.create({
+                    webAuthentication: WebAuthenticationMessage.create({
+                        identification: this.getIdentificationMessage(),
+                        token,
+                        nonce,
+                        accessList: accessList,
+                    })
+                });
+                console.log('authMsg-----', authMsg);
+                // this.send(proto_builders_1.ClientMessage.encode(authMsg).finish());
             })
-            // .then((auth) => {
-            //     const {token, nonce, accessList} = auth;
-            //
-            //     console.log('token', token);
-            //     console.log('nonce', nonce);
-            //     console.log('accessList', accessList);
-            //     // const authMsg = proto_builders_1.ClientMessage.create({
-            //     //     webAuthentication: proto_builders_1.WebAuthenticationMessage.create({
-            //     //         identification: this.getIdentificationMessage(),
-            //     //         token,
-            //     //         nonce,
-            //     //         accessList: accessList,
-            //     //     })
-            //     // });
-            //     // console.log('sub to 104');
-            //     // this.send(proto_builders_1.ClientMessage.encode(authMsg).finish());
-            // })
-            // .catch((e) => {
-            //     this.log("error", ERROR[e]);
-            // });
+            .catch((e) => {
+                this.log("error", ERROR[e]);
+            });
     }
 
     /**

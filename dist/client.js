@@ -203,35 +203,39 @@ class CWStreamClient extends events_1.EventEmitter {
         }, this.session.reconnectTimeout * 1000);
         this.emit(STATE.WAITING_TO_RECONNECT, this.session.reconnectTimeout);
     }
+    getIdentificationMessage() {
+        return proto_builders_1.ClientIdentificationMessage.create({
+            userAgent: 'Unknown user-agent',
+            revision: '46b7514904bbc1f44747c12bc3fb210adeec68d5',
+            integration: 'kraken',
+            locale: 'en',
+            subscriptions: this.subscriptions()
+        });
+    }
     authenticate() {
         this.emit(STATE.AUTHENTICATING);
         const baseTokenUrl = 'https://trade.kraken.com/auth/cat?view=market&exchange=4';
         const tokenUrl = this.session.market ? `baseTokenUrl&market=${this.session.market}` : baseTokenUrl;
         axios_1.default.get(tokenUrl)
             .then((response) => {
-            console.log('response', response.data);
-            // return response.json();
+            const { token, nonce, accessList } = response.data;
+            console.log('token', token);
+            console.log('nonce', nonce);
+            console.log('accessList', accessList);
+            const authMsg = proto_builders_1.ClientMessage.create({
+                webAuthentication: proto_builders_1.WebAuthenticationMessage.create({
+                    identification: this.getIdentificationMessage(),
+                    token,
+                    nonce,
+                    accessList: accessList,
+                })
+            });
+            console.log('authMsg-----', authMsg);
+            // this.send(proto_builders_1.ClientMessage.encode(authMsg).finish());
+        })
+            .catch((e) => {
+            this.log("error", ERROR[e]);
         });
-        // .then((auth) => {
-        //     const {token, nonce, accessList} = auth;
-        //
-        //     console.log('token', token);
-        //     console.log('nonce', nonce);
-        //     console.log('accessList', accessList);
-        //     // const authMsg = proto_builders_1.ClientMessage.create({
-        //     //     webAuthentication: proto_builders_1.WebAuthenticationMessage.create({
-        //     //         identification: this.getIdentificationMessage(),
-        //     //         token,
-        //     //         nonce,
-        //     //         accessList: accessList,
-        //     //     })
-        //     // });
-        //     // console.log('sub to 104');
-        //     // this.send(proto_builders_1.ClientMessage.encode(authMsg).finish());
-        // })
-        // .catch((e) => {
-        //     this.log("error", ERROR[e]);
-        // });
     }
     /**
      * Gets current unix time in nanoseconds, as a string. The use of big.js is
