@@ -1253,9 +1253,10 @@ imurmurhash@^0.1.4:
   version "0.1.4"
   resolved "https://registry.yarnpkg.com/imurmurhash/-/imurmurhash-0.1.4.tgz#9218b9b2b928a238b13dc4fb6b6d576f231453ea"
 
-in-series@0.0.4:
+in-series@^0.0.4:
   version "0.0.4"
   resolved "https://registry.yarnpkg.com/in-series/-/in-series-0.0.4.tgz#0f52b7a58798a4625060314442eca67d5c40bc2c"
+  integrity sha1-D1K3pYeYpGJQYDFEQuymfVxAvCw=
   dependencies:
     batch "^0.5.3"
 
