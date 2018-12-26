@@ -3,7 +3,7 @@ import * as crypto from "crypto";
 import {EventEmitter} from "events";
 import * as pjson from "pjson";
 import * as WebSocket from "ws";
-import fetch from 'fetch';
+import axios from 'axios';
 
 // Protobuf message constructors
 import {
@@ -292,30 +292,31 @@ export class CWStreamClient extends EventEmitter {
         this.emit(STATE.AUTHENTICATING);
         const baseTokenUrl = 'https://trade.kraken.com/auth/cat?view=market&exchange=4';
         const tokenUrl = this.session.market ? `baseTokenUrl&market=${this.session.market}` : baseTokenUrl;
-        fetch(tokenUrl)
+        axios.get(tokenUrl)
             .then((response) => {
-                return response.json();
+                console.log('response', response.data);
+                // return response.json();
             })
-            .then((auth) => {
-                const {token, nonce, accessList} = auth;
-
-                console.log('token', token);
-                console.log('nonce', nonce);
-                console.log('accessList', accessList);
-                // const authMsg = proto_builders_1.ClientMessage.create({
-                //     webAuthentication: proto_builders_1.WebAuthenticationMessage.create({
-                //         identification: this.getIdentificationMessage(),
-                //         token,
-                //         nonce,
-                //         accessList: accessList,
-                //     })
-                // });
-                // console.log('sub to 104');
-                // this.send(proto_builders_1.ClientMessage.encode(authMsg).finish());
-            })
-            .catch((e) => {
-                this.log("error", ERROR[e]);
-            });
+            // .then((auth) => {
+            //     const {token, nonce, accessList} = auth;
+            //
+            //     console.log('token', token);
+            //     console.log('nonce', nonce);
+            //     console.log('accessList', accessList);
+            //     // const authMsg = proto_builders_1.ClientMessage.create({
+            //     //     webAuthentication: proto_builders_1.WebAuthenticationMessage.create({
+            //     //         identification: this.getIdentificationMessage(),
+            //     //         token,
+            //     //         nonce,
+            //     //         accessList: accessList,
+            //     //     })
+            //     // });
+            //     // console.log('sub to 104');
+            //     // this.send(proto_builders_1.ClientMessage.encode(authMsg).finish());
+            // })
+            // .catch((e) => {
+            //     this.log("error", ERROR[e]);
+            // });
     }
 
     /**

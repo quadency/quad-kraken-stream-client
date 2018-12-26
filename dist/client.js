@@ -4,7 +4,7 @@ const big_js_1 = require("big.js");
 const crypto = require("crypto");
 const events_1 = require("events");
 const WebSocket = require("ws");
-const fetch_1 = require("fetch");
+const axios_1 = require("axios");
 // Protobuf message constructors
 const proto_builders_1 = require("./proto-builders");
 // Protobuf message type definitions
@@ -207,29 +207,31 @@ class CWStreamClient extends events_1.EventEmitter {
         this.emit(STATE.AUTHENTICATING);
         const baseTokenUrl = 'https://trade.kraken.com/auth/cat?view=market&exchange=4';
         const tokenUrl = this.session.market ? `baseTokenUrl&market=${this.session.market}` : baseTokenUrl;
-        fetch_1.default(tokenUrl)
+        axios_1.default.get(tokenUrl)
             .then((response) => {
-            return response.json();
-        })
-            .then((auth) => {
-            const { token, nonce, accessList } = auth;
-            console.log('token', token);
-            console.log('nonce', nonce);
-            console.log('accessList', accessList);
-            // const authMsg = proto_builders_1.ClientMessage.create({
-            //     webAuthentication: proto_builders_1.WebAuthenticationMessage.create({
-            //         identification: this.getIdentificationMessage(),
-            //         token,
-            //         nonce,
-            //         accessList: accessList,
-            //     })
-            // });
-            // console.log('sub to 104');
-            // this.send(proto_builders_1.ClientMessage.encode(authMsg).finish());
-        })
-            .catch((e) => {
-            this.log("error", ERROR[e]);
+            console.log('response', response.data);
+            // return response.json();
         });
+        // .then((auth) => {
+        //     const {token, nonce, accessList} = auth;
+        //
+        //     console.log('token', token);
+        //     console.log('nonce', nonce);
+        //     console.log('accessList', accessList);
+        //     // const authMsg = proto_builders_1.ClientMessage.create({
+        //     //     webAuthentication: proto_builders_1.WebAuthenticationMessage.create({
+        //     //         identification: this.getIdentificationMessage(),
+        //     //         token,
+        //     //         nonce,
+        //     //         accessList: accessList,
+        //     //     })
+        //     // });
+        //     // console.log('sub to 104');
+        //     // this.send(proto_builders_1.ClientMessage.encode(authMsg).finish());
+        // })
+        // .catch((e) => {
+        //     this.log("error", ERROR[e]);
+        // });
     }
     /**
      * Gets current unix time in nanoseconds, as a string. The use of big.js is
