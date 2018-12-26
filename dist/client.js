@@ -216,7 +216,6 @@ class CWStreamClient extends events_1.EventEmitter {
         this.emit(STATE.AUTHENTICATING);
         const baseTokenUrl = 'https://trade.kraken.com/auth/cat?view=market&exchange=4';
         const tokenUrl = this.session.market ? `${baseTokenUrl}&market=${this.session.market}` : baseTokenUrl;
-        console.log('tokenUrl', tokenUrl);
         axios_1.default.get(tokenUrl)
             .then((response) => {
             const { token, nonce, accessList } = response.data;
