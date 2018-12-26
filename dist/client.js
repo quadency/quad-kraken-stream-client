@@ -4,6 +4,7 @@ const big_js_1 = require("big.js");
 const crypto = require("crypto");
 const events_1 = require("events");
 const WebSocket = require("ws");
+const fetch_1 = require("fetch");
 // Protobuf message constructors
 const proto_builders_1 = require("./proto-builders");
 // Protobuf message type definitions
@@ -204,24 +205,9 @@ class CWStreamClient extends events_1.EventEmitter {
     }
     authenticate() {
         this.emit(STATE.AUTHENTICATING);
-        // // The client should never use their own nonce, this is only for testing
-        // // purposes
-        // const nonce = this.session.nonce ? this.session.nonce : this.getNonce();
-        // const token = this.generateToken(nonce);
-        // const authMsg = ClientMessage.create({
-        //   apiAuthentication: APIAuthenticationMessage.create({
-        //     apiKey: this.session.apiKey,
-        //     nonce,
-        //     source: ProtobufClient.APIAuthenticationMessage.Source.NODE_SDK,
-        //     subscriptions: this.subscriptions(),
-        //     token,
-        //     version: pjson.version
-        //   })
-        // });
-        // this.send(ClientMessage.encode(authMsg).finish());
         const baseTokenUrl = 'https://trade.kraken.com/auth/cat?view=market&exchange=4';
         const tokenUrl = this.session.market ? `baseTokenUrl&market=${this.session.market}` : baseTokenUrl;
-        fetch(tokenUrl)
+        fetch_1.default(tokenUrl)
             .then((response) => {
             return response.json();
         })

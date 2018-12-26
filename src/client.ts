@@ -3,6 +3,7 @@ import * as crypto from "crypto";
 import {EventEmitter} from "events";
 import * as pjson from "pjson";
 import * as WebSocket from "ws";
+import fetch from 'fetch';
 
 // Protobuf message constructors
 import {
@@ -289,23 +290,6 @@ export class CWStreamClient extends EventEmitter {
 
     private authenticate(): void {
         this.emit(STATE.AUTHENTICATING);
-
-        // // The client should never use their own nonce, this is only for testing
-        // // purposes
-        // const nonce = this.session.nonce ? this.session.nonce : this.getNonce();
-        // const token = this.generateToken(nonce);
-        // const authMsg = ClientMessage.create({
-        //   apiAuthentication: APIAuthenticationMessage.create({
-        //     apiKey: this.session.apiKey,
-        //     nonce,
-        //     source: ProtobufClient.APIAuthenticationMessage.Source.NODE_SDK,
-        //     subscriptions: this.subscriptions(),
-        //     token,
-        //     version: pjson.version
-        //   })
-        // });
-        // this.send(ClientMessage.encode(authMsg).finish());
-
         const baseTokenUrl = 'https://trade.kraken.com/auth/cat?view=market&exchange=4';
         const tokenUrl = this.session.market ? `baseTokenUrl&market=${this.session.market}` : baseTokenUrl;
         fetch(tokenUrl)
