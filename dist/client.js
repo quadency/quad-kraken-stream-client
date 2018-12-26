@@ -228,8 +228,7 @@ class CWStreamClient extends events_1.EventEmitter {
                     accessList: accessList,
                 })
             });
-            console.log('authMsg-----', authMsg);
-            // this.send(proto_builders_1.ClientMessage.encode(authMsg).finish());
+            this.send(proto_builders_1.ClientMessage.encode(authMsg).finish());
         })
             .catch((e) => {
             this.log("error", ERROR[e]);
