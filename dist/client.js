@@ -216,12 +216,10 @@ class CWStreamClient extends events_1.EventEmitter {
         this.emit(STATE.AUTHENTICATING);
         const baseTokenUrl = 'https://trade.kraken.com/auth/cat?view=market&exchange=4';
         const tokenUrl = this.session.market ? `baseTokenUrl&market=${this.session.market}` : baseTokenUrl;
+        console.log('tokenUrl', tokenUrl);
         axios_1.default.get(tokenUrl)
             .then((response) => {
             const { token, nonce, accessList } = response.data;
-            console.log('token', token);
-            console.log('nonce', nonce);
-            console.log('accessList', accessList);
             const authMsg = proto_builders_1.ClientMessage.create({
                 webAuthentication: proto_builders_1.WebAuthenticationMessage.create({
                     identification: this.getIdentificationMessage(),
