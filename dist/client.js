@@ -74,24 +74,18 @@ class CWStreamClient extends events_1.EventEmitter {
     constructor(opts = defaultOptions) {
         super();
         // // Environment variables
-        // if (process.env.CW_API_KEY) {
-        //   opts.apiKey = process.env.CW_API_KEY;
-        // }
-        // if (process.env.CW_SECRET_KEY) {
-        //   opts.secretKey = process.env.CW_SECRET_KEY;
-        // }
+        if (process.env.CW_API_KEY) {
+            opts.apiKey = process.env.CW_API_KEY;
+        }
+        if (process.env.CW_SECRET_KEY) {
+            opts.secretKey = process.env.CW_SECRET_KEY;
+        }
         // Set minimum reconnectTimeout of 1s if backoff=false
         if (!opts.backoff && opts.reconnectTimeout < 1) {
             opts.reconnectTimeout = 1;
         }
         // Merge supplied options with defaults
         this.session = Object.assign(defaultOptions, opts);
-        if (this.session.apiKey.length === 0) {
-            throw new Error(ERROR.MISSING_API_KEY);
-        }
-        if (this.session.secretKey.length === 0) {
-            throw new Error(ERROR.MISSING_SECRET_KEY);
-        }
         // Keep track of subscriptions in case we need to reconnect after the client
         // has called subscribe()
         this.subscriptionState = {};
