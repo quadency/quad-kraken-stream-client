@@ -348,6 +348,10 @@ export class CWStreamClient extends EventEmitter {
             return;
         }
 
+        if(!message || !Object.keys(message).length){
+            return
+        }
+
         switch (message.body) {
             case "authenticationResult":
                 this.authResultHandler(message.authenticationResult);

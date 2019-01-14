@@ -256,6 +256,9 @@ class CWStreamClient extends events_1.EventEmitter {
             this.log("error", e);
             return;
         }
+        if (!message || !Object.keys(message).length) {
+            return;
+        }
         switch (message.body) {
             case "authenticationResult":
                 this.authResultHandler(message.authenticationResult);
