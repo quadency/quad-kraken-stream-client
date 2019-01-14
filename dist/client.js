@@ -267,7 +267,7 @@ class CWStreamClient extends events_1.EventEmitter {
                 this.emit(EVENT.PAIR_UPDATE, message.pairUpdate);
                 break;
             default:
-                this.emit(ERROR.PROTOBUF);
+                this.log("info", `unknown message type, ${message}`);
         }
     }
     authResultHandler(authResult) {
