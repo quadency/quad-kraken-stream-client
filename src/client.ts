@@ -348,6 +348,10 @@ export class CWStreamClient extends EventEmitter {
             return;
         }
 
+        if(!message || !Object.keys(message).length){
+            return
+        }
+
         switch (message.body) {
             case "authenticationResult":
                 this.authResultHandler(message.authenticationResult);
@@ -359,7 +363,7 @@ export class CWStreamClient extends EventEmitter {
                 this.emit(EVENT.PAIR_UPDATE, message.pairUpdate);
                 break;
             default:
-                this.log("info", `unknown message type, ignoring..`);
+                this.emit(ERROR.PROTOBUF);
         }
     }
 
