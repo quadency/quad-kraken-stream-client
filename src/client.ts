@@ -359,7 +359,7 @@ export class CWStreamClient extends EventEmitter {
                 this.emit(EVENT.PAIR_UPDATE, message.pairUpdate);
                 break;
             default:
-                this.log("info", `unknown message type, ${message}`);
+                this.log("info", `unknown message type, ignoring..`);
         }
     }
 
