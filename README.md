@@ -1,2 +1,1 @@
-# Krkn Stream Client
-
+# quad-kraken-stream-client
