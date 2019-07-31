@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "kraken public streams client for quadency",
   "main": "./dist/index.js",
-  "repository": "git@github.com:quadency/quad-kraken-stream-client.git",
+  "repository": "git@github.com:quadency/quad-krkn-stream-client.git",
   "author": "quadency",
   "license": "MIT",
   "scripts": {
