@@ -40,6 +40,7 @@ class KrakenStreamClient {
 
     this.correlationId = correlationId;
     this.socket = socket;
+    this.pingInterval = KrakenStreamClient.startPings(this.socket);
 
     this.socket.onmessage = msg => {
       const message = JSON.parse(msg.data);
@@ -50,12 +51,14 @@ class KrakenStreamClient {
     };
     this.socket.onerror = error => {
       console.log(`[correlationId=${this.correlationId}] ${EXCHANGE} connection error ${error}`);
+      clearInterval(this.pingInterval);
       if (this.onErrorCB) {
         this.onErrorCB();
       }
     };
     this.socket.onclose = () => {
       console.log(`[correlationId=${this.correlationId}] ${EXCHANGE} connection closed`);
+      clearInterval(this.pingInterval);
       if (this.onCloseCB) {
         this.onCloseCB();
       }
@@ -76,12 +79,12 @@ class KrakenStreamClient {
 
   static createClient(correlationId) {
     return _asyncToGenerator(function* () {
-      const socket = yield KrakenStreamClient.initialize(correlationId);
+      const socket = yield KrakenStreamClient.connect(correlationId);
       return new KrakenStreamClient(correlationId, socket);
     })();
   }
 
-  static initialize(correlationId) {
+  static connect(correlationId) {
     return new Promise((resolve, reject) => {
       const socket = new _ws2.default(WEBSOCKET_URI);
       socket.onopen = () => {
@@ -89,6 +92,15 @@ class KrakenStreamClient {
         resolve(socket);
       };
     });
+  }
+
+  static startPings(socket) {
+    return setInterval(() => {
+      const pingMessage = {
+        event: _utils.EVENTS.PING
+      };
+      socket.send(JSON.stringify(pingMessage));
+    }, 5000);
   }
 
   handleMessage(message) {
