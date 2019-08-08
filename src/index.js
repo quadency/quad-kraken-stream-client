@@ -9,73 +9,90 @@ const WEBSOCKET_URI = 'wss://ws.kraken.com';
 const EXCHANGE = 'KRAKEN';
 const IGNORE_EVENTS = [EVENTS.PONG, EVENTS.HEARTBEAT, EVENTS.SYSTEM_STATUS, EVENTS.SUBSCRIPTION_STATUS];
 
+const defaultOptions = {
+  msBetweenPings: 5000,
+  autoReconnect: false
+}
+
 class KrakenStreamClient {
-  constructor(correlationId, socket) {
-    if (!socket) {
-      throw new Error('No Socket');
-    }
-
+  constructor(correlationId, options) {
     this.correlationId = correlationId;
-    this.socket = socket;
-    this.pingInterval = KrakenStreamClient.startPings(this.socket);
+    this.options = Object.assign(defaultOptions, options);
 
-    this.socket.onmessage = (msg) => {
-      const message = JSON.parse(msg.data);
-      if (IGNORE_EVENTS.includes(message.event)) {
-        return;
-      }
-      this.handleMessage(message);
-    };
-    this.socket.onerror = (error) => {
-      console.log(`[correlationId=${this.correlationId}] ${EXCHANGE} connection error ${error}`);
-      clearInterval(this.pingInterval);
-      if (this.onErrorCB) {
-        this.onErrorCB();
-      }
-    };
-    this.socket.onclose = () => {
-      console.log(`[correlationId=${this.correlationId}] ${EXCHANGE} connection closed`);
-      clearInterval(this.pingInterval);
-      if (this.onCloseCB) {
-        this.onCloseCB();
-      }
-    };
-
-    this.ticker = new Ticker(socket);
-    this.trade = new Trade(socket);
-    this.book = new Book(socket);
+    this.socket = null;
+    this.pingInterval = null;
   }
 
-  onError(cb) {
-    this.onErrorCB = cb;
-  };
+  onOpen(fn) { this.onOpenCB = fn; }
+  onError(fn) { this.onErrorCB = fn; }
+  onClose (fn) { this.onCloseCB = fn; }
 
-  onClose(cb) {
-    this.onCloseCB = cb;
+  static startPings(socket, interval) {
+    return setInterval(() => {
+      const pingMessage = {
+        event: EVENTS.PING,
+      };
+      socket.send(JSON.stringify(pingMessage));
+    }, interval)
   }
 
-  static async createClient(correlationId) {
-    const socket = await KrakenStreamClient.connect(correlationId);
-    return new KrakenStreamClient(correlationId, socket);
-  }
-
-  static connect(correlationId) {
+  initSocket() {
     return new Promise((resolve, reject) => {
       const socket = new WebSocket(WEBSOCKET_URI);
-      socket.onopen = () => {
-        console.log(`[correlationId=${correlationId}] ${EXCHANGE} connection open`);
-        resolve(socket)
+
+      socket.onerror = () => {
+        console.log(`[correlationId=${this.correlationId}] ${EXCHANGE} connection error ${error}`);
+        if (this.onErrorCB) {
+          this.onErrorCB();
+        }
       };
+
+      socket.onclose = () => {
+        console.log(`[correlationId=${this.correlationId}] ${EXCHANGE} connection closed`);
+        clearInterval(this.pingInterval);
+        if (this.options.autoReconnect) {
+          this.reconnect();
+        }
+
+        if (this.onCloseCB) {
+          this.onCloseCB();
+        }
+      };
+
+      socket.onmessage = (msg) => {
+        const message = JSON.parse(msg.data);
+        if (IGNORE_EVENTS.includes(message.event)) {
+          return;
+        }
+        this.handleMessage(message);
+      }
+
+      socket.onopen = () => {
+        console.log(`[correlationId=${this.correlationId}] ${EXCHANGE} connection open`);
+        if (this.onOpenCB) {
+          this.onOpenCB();
+        }
+        resolve(socket);
+      }
     });
   }
 
-  static startPings(socket) {
-    return setInterval(() => {
-      const pingMessage = {
-        event: EVENTS.PING
-      };
-      socket.send(JSON.stringify(pingMessage));
-    }, 5000);
+  async connect() {
+    this.socket = await this.initSocket();
+    this.ticker = new Ticker(this.socket);
+    this.trade = new Trade(this.socket);
+    this.book = new Book(this.socket);
+
+    this.pingInterval = KrakenStreamClient.startPings(this.socket, this.options.msBetweenPings);
+  }
+
+  async reconnect() {
+    this.socket = await this.initSocket();
+    this.ticker.setSocket(this.socket);
+    this.trade.setSocket(this.socket);
+    this.book.setSocket(this.socket);
+
+    this.pingInterval = KrakenStreamClient.startPings(this.socket, this.options.msBetweenPings);
   }
 
   handleMessage(message) {

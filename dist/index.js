@@ -32,75 +32,104 @@ const WEBSOCKET_URI = 'wss://ws.kraken.com';
 const EXCHANGE = 'KRAKEN';
 const IGNORE_EVENTS = [_utils.EVENTS.PONG, _utils.EVENTS.HEARTBEAT, _utils.EVENTS.SYSTEM_STATUS, _utils.EVENTS.SUBSCRIPTION_STATUS];
 
+const defaultOptions = {
+  msBetweenPings: 5000,
+  autoReconnect: false
+};
+
 class KrakenStreamClient {
-  constructor(correlationId, socket) {
-    if (!socket) {
-      throw new Error('No Socket');
-    }
-
+  constructor(correlationId, options) {
     this.correlationId = correlationId;
-    this.socket = socket;
-    this.pingInterval = KrakenStreamClient.startPings(this.socket);
+    this.options = Object.assign(defaultOptions, options);
 
-    this.socket.onmessage = msg => {
-      const message = JSON.parse(msg.data);
-      if (IGNORE_EVENTS.includes(message.event)) {
-        return;
-      }
-      this.handleMessage(message);
-    };
-    this.socket.onerror = error => {
-      console.log(`[correlationId=${this.correlationId}] ${EXCHANGE} connection error ${error}`);
-      clearInterval(this.pingInterval);
-      if (this.onErrorCB) {
-        this.onErrorCB();
-      }
-    };
-    this.socket.onclose = () => {
-      console.log(`[correlationId=${this.correlationId}] ${EXCHANGE} connection closed`);
-      clearInterval(this.pingInterval);
-      if (this.onCloseCB) {
-        this.onCloseCB();
-      }
-    };
-
-    this.ticker = new _ticker2.default(socket);
-    this.trade = new _trade2.default(socket);
-    this.book = new _book2.default(socket);
+    this.socket = null;
+    this.pingInterval = null;
   }
 
-  onError(cb) {
-    this.onErrorCB = cb;
+  onOpen(fn) {
+    this.onOpenCB = fn;
+  }
+  onError(fn) {
+    this.onErrorCB = fn;
+  }
+  onClose(fn) {
+    this.onCloseCB = fn;
   }
 
-  onClose(cb) {
-    this.onCloseCB = cb;
-  }
-
-  static createClient(correlationId) {
-    return _asyncToGenerator(function* () {
-      const socket = yield KrakenStreamClient.connect(correlationId);
-      return new KrakenStreamClient(correlationId, socket);
-    })();
-  }
-
-  static connect(correlationId) {
-    return new Promise((resolve, reject) => {
-      const socket = new _ws2.default(WEBSOCKET_URI);
-      socket.onopen = () => {
-        console.log(`[correlationId=${correlationId}] ${EXCHANGE} connection open`);
-        resolve(socket);
-      };
-    });
-  }
-
-  static startPings(socket) {
+  static startPings(socket, interval) {
     return setInterval(() => {
       const pingMessage = {
         event: _utils.EVENTS.PING
       };
       socket.send(JSON.stringify(pingMessage));
-    }, 5000);
+    }, interval);
+  }
+
+  initSocket() {
+    return new Promise((resolve, reject) => {
+      const socket = new _ws2.default(WEBSOCKET_URI);
+
+      socket.onerror = () => {
+        console.log(`[correlationId=${this.correlationId}] ${EXCHANGE} connection error ${error}`);
+        if (this.onErrorCB) {
+          this.onErrorCB();
+        }
+      };
+
+      socket.onclose = () => {
+        console.log(`[correlationId=${this.correlationId}] ${EXCHANGE} connection closed`);
+        clearInterval(this.pingInterval);
+        if (this.options.autoReconnect) {
+          this.reconnect();
+        }
+
+        if (this.onCloseCB) {
+          this.onCloseCB();
+        }
+      };
+
+      socket.onmessage = msg => {
+        const message = JSON.parse(msg.data);
+        if (IGNORE_EVENTS.includes(message.event)) {
+          return;
+        }
+        this.handleMessage(message);
+      };
+
+      socket.onopen = () => {
+        console.log(`[correlationId=${this.correlationId}] ${EXCHANGE} connection open`);
+        if (this.onOpenCB) {
+          this.onOpenCB();
+        }
+        resolve(socket);
+      };
+    });
+  }
+
+  connect() {
+    var _this = this;
+
+    return _asyncToGenerator(function* () {
+      _this.socket = yield _this.initSocket();
+      _this.ticker = new _ticker2.default(_this.socket);
+      _this.trade = new _trade2.default(_this.socket);
+      _this.book = new _book2.default(_this.socket);
+
+      _this.pingInterval = KrakenStreamClient.startPings(_this.socket, _this.options.msBetweenPings);
+    })();
+  }
+
+  reconnect() {
+    var _this2 = this;
+
+    return _asyncToGenerator(function* () {
+      _this2.socket = yield _this2.initSocket();
+      _this2.ticker.setSocket(_this2.socket);
+      _this2.trade.setSocket(_this2.socket);
+      _this2.book.setSocket(_this2.socket);
+
+      _this2.pingInterval = KrakenStreamClient.startPings(_this2.socket, _this2.options.msBetweenPings);
+    })();
   }
 
   handleMessage(message) {
