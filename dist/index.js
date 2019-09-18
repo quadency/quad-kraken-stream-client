@@ -69,7 +69,7 @@ class KrakenStreamClient {
     return new Promise((resolve, reject) => {
       const socket = new _ws2.default(WEBSOCKET_URI);
 
-      socket.onerror = () => {
+      socket.onerror = error => {
         console.log(`[correlationId=${this.correlationId}] ${EXCHANGE} connection error ${error}`);
         if (this.onErrorCB) {
           this.onErrorCB();
