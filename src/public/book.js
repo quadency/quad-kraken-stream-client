@@ -4,7 +4,7 @@ import { CHANNELS } from './utils';
 class Book extends Channel {
   constructor(socket) {
     const options = {
-      depth: 100
+      depth: 100,
     };
 
     super(socket, CHANNELS.BOOK, options);
@@ -17,7 +17,7 @@ class Book extends Channel {
       asks: [],
       bids: [],
       type: 'snapshot',
-      pair
+      pair,
     };
 
     snapshot.as.forEach((ask) => {
@@ -25,9 +25,9 @@ class Book extends Channel {
         price: ask[0],
         volume: ask[1],
         timestamp: ask[2],
-      }
+      };
       normalized.asks.push(normalizedAsk);
-    })
+    });
     snapshot.bs.forEach((bid) => {
       const normalizedBid = {
         price: bid[0],
@@ -47,12 +47,10 @@ class Book extends Channel {
     if (message.length === 5) {
       asks = message[1].a;
       bids = message[2].b;
+    } else if (message[1].a) {
+      asks = message[1].a;
     } else {
-      if (message[1].a) {
-        asks = message[1].a;
-      } else {
-        bids = message[1].b;
-      }
+      bids = message[1].b;
     }
 
     const pair = message.slice(-1)[0];
@@ -60,7 +58,7 @@ class Book extends Channel {
       asks: [],
       bids: [],
       type: 'delta',
-      pair
+      pair,
     };
 
     asks.forEach((ask) => {
