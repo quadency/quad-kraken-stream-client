@@ -1,6 +1,9 @@
 import crypto from 'crypto';
 import WebSocket from 'ws';
 import axios from 'axios';
+import Balances from './balances';
+import Orders from './orders';
+import { EVENTS } from './utils';
 
 const WEBSOCKET_URI = 'wss://ws-auth.kraken.com';
 const REST_URI = 'https://api.kraken.com';
@@ -8,7 +11,9 @@ const EXCHANGE = 'KRAKEN';
 
 const defaultOptions = {
   apiKey: '',
-  secretKey: ''
+  secretKey: '',
+  autoReconnect: false,
+  msBetweenPings: 5000
 };
 
 function createSignature(apiPath, secretKey, nonce) {
@@ -34,6 +39,19 @@ class PrivateClient {
     }
   }
 
+  setOnOpenHook(fn) { this.onOpenHook = fn; }
+  setOnErrorHook(fn) { this.onErrorHook = fn; }
+  setOnCloseHook(fn) { this.onCloseHook = fn; }
+
+  static startPings(socket, interval) {
+    return setInterval(() => {
+      const pingMessage = {
+        event: EVENTS.PING,
+      };
+      socket.send(JSON.stringify(pingMessage));
+    }, interval);
+  }
+
   async getAuthToken() {
     const { apiKey, secretKey } = this.options;
     const apiPath = '/0/private/GetWebSocketsToken';
@@ -55,12 +73,58 @@ class PrivateClient {
     if (res.data.error.length) {
       throw new Error(`Error getting auth token ${res.data.error}`);
     }
-    return res.data
+    return res.data.result.token
+  }
+
+  initSocket() {
+    return new Promise((resolve, reject) => {
+      const socket = new WebSocket(WEBSOCKET_URI);
+
+      socket.onerror = (error) => {
+        console.log(`[correlationId=${this.correlationId}] ${EXCHANGE} connection error ${error}`);
+        if (this.onErrorHook) {
+          this.onErrorHook();
+        }
+      };
+
+      socket.onclose = () => {
+        console.log(`[correlationId=${this.correlationId}] ${EXCHANGE} connection closed`);
+        clearInterval(this.pingInterval);
+        if (this.options.autoReconnect) {
+          this.connect();
+        }
+
+        if (this.onCloseHook) {
+          this.onCloseHook();
+        }
+      };
+
+      socket.onmessage = (msg) => {
+        const message = JSON.parse(msg.data);
+        this.handleMessage(message);
+      };
+
+      socket.onopen = () => {
+        console.log(`[correlationId=${this.correlationId}] ${EXCHANGE} connection open`);
+        if (this.onOpenHook) {
+          this.onOpenHook();
+        }
+        resolve(socket);
+      };
+    });
   }
 
   async connect() {
     this.authToken = await this.getAuthToken();
-    console.log(this.authToken);
+    this.socket = await this.initSocket();
+    this.balance = new Balances(this.socket, this.authToken);
+    this.order = new Orders(this.socket, this.authToken);
+
+    this.pingInterval = PrivateClient.startPings(this.socket, this.options.msBetweenPings);
+  }
+
+  handleMessage(message) {
+    console.log(JSON.stringify(message, null, 2));
   }
 }
 
