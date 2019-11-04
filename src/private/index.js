@@ -3,7 +3,7 @@ import WebSocket from 'ws';
 import axios from 'axios';
 import Balances from './balances';
 import OpenOrders from './openOrders';
-import { EVENTS } from './utils';
+import { EVENTS, CHANNELS } from './utils';
 
 const WEBSOCKET_URI = 'wss://ws-auth.kraken.com';
 const REST_URI = 'https://api.kraken.com';
@@ -123,6 +123,17 @@ class PrivateClient {
     this.openOrders = new OpenOrders(this.socket, this.authToken);
 
     this.pingInterval = PrivateClient.startPings(this.socket, this.options.msBetweenPings);
+  }
+
+  disconnect() {
+    Object.values(CHANNELS).forEach(channel => this[channel].unsubscribe());
+    clearInterval(this.pingInterval);
+    this.pingInterval = null;
+
+    this.socket.terminate();
+    this.socket = null;
+    this.authToken = null;
+    this.options = null;
   }
 
   handleMessage(message) {

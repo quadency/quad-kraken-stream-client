@@ -161,6 +161,17 @@ class PrivateClient {
     })();
   }
 
+  disconnect() {
+    Object.values(_utils.CHANNELS).forEach(channel => this[channel].unsubscribe());
+    clearInterval(this.pingInterval);
+    this.pingInterval = null;
+
+    this.socket.terminate();
+    this.socket = null;
+    this.authToken = null;
+    this.options = null;
+  }
+
   handleMessage(message) {
     const [msgs, channel] = message;
 
