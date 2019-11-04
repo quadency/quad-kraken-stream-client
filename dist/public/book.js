@@ -58,12 +58,10 @@ class Book extends _channel2.default {
     if (message.length === 5) {
       asks = message[1].a;
       bids = message[2].b;
+    } else if (message[1].a) {
+      asks = message[1].a;
     } else {
-      if (message[1].a) {
-        asks = message[1].a;
-      } else {
-        bids = message[1].b;
-      }
+      bids = message[1].b;
     }
 
     const pair = message.slice(-1)[0];
