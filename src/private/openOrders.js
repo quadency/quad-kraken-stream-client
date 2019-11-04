@@ -1,7 +1,7 @@
 import Channel from './channel';
 import { CHANNELS } from './utils';
 
-class Orders extends Channel {
+class OpenOrders extends Channel {
   constructor(socket, authToken) {
     super(socket, authToken, CHANNELS.ORDERS);
   }
@@ -11,4 +11,4 @@ class Orders extends Channel {
   }
 }
 
-export default Orders;
+export default OpenOrders;

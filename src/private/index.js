@@ -2,7 +2,7 @@ import crypto from 'crypto';
 import WebSocket from 'ws';
 import axios from 'axios';
 import Balances from './balances';
-import Orders from './orders';
+import OpenOrders from './openOrders';
 import { EVENTS } from './utils';
 
 const WEBSOCKET_URI = 'wss://ws-auth.kraken.com';
@@ -101,7 +101,9 @@ class PrivateClient {
 
       socket.onmessage = (msg) => {
         const message = JSON.parse(msg.data);
-        this.handleMessage(message);
+        if (Array.isArray(message)) {
+          this.handleMessage(message);
+        }
       };
 
       socket.onopen = () => {
@@ -118,13 +120,17 @@ class PrivateClient {
     this.authToken = await this.getAuthToken();
     this.socket = await this.initSocket();
     this.balance = new Balances(this.socket, this.authToken);
-    this.order = new Orders(this.socket, this.authToken);
+    this.openOrders = new OpenOrders(this.socket, this.authToken);
 
     this.pingInterval = PrivateClient.startPings(this.socket, this.options.msBetweenPings);
   }
 
   handleMessage(message) {
-    console.log(JSON.stringify(message, null, 2));
+    const [ [ msg ], channel] = message;
+
+    if (this[channel]) {
+      this[channel].onMessageUpdate(msg);
+    }
   }
 }
 

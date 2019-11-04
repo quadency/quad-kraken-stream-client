@@ -6,9 +6,7 @@ const EVENTS = {
 };
 
 const CHANNELS = {
-  // BALANCES: 'account_balances_and_margins',
-  // ORDERS: 'open_orders',
-  BALANCES: 'balances',
+  BALANCES: 'accountBalancesAndMargins',
   ORDERS: 'openOrders'
 };
 
