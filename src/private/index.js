@@ -83,7 +83,7 @@ class PrivateClient {
       socket.onerror = (error) => {
         console.log(`[correlationId=${this.correlationId}] ${EXCHANGE} connection error ${error}`);
         if (this.onErrorHook) {
-          this.onErrorHook();
+          this.onErrorHook(error);
         }
       };
 
