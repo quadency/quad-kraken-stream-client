@@ -14,9 +14,33 @@ var _utils = require('./utils');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
+
+const normalizedToUnormalizedPropsMap = {
+  symbol: 'pair',
+  type: 'ordertype',
+  price: 'price',
+  side: 'type',
+  stop_price: 'stopprice',
+  amount: 'vol',
+  filled: 'vol_exec',
+  datetime: 'opentm'
+};
+
 class OpenOrders extends _channel2.default {
   constructor(socket, authToken) {
     super(socket, authToken, _utils.CHANNELS.ORDERS);
+  }
+
+  flattenOrderDetails(orderDetails) {
+    if (orderDetails.descr) {
+      const { descr } = orderDetails,
+            rest = _objectWithoutProperties(orderDetails, ['descr']);
+      return Object.assign(rest, _extends({}, descr));
+    }
+
+    // ensure return copy
+    return JSON.parse(JSON.stringify(orderDetails));
   }
 
   normalizeMessages(messages) {
@@ -24,9 +48,19 @@ class OpenOrders extends _channel2.default {
       const orderId = Object.keys(message)[0];
       const orderDetails = message[orderId];
 
-      return _extends({
-        orderId
+      const info = _extends({
+        id: orderId
       }, orderDetails);
+
+      const flattenedOrderDetails = this.flattenOrderDetails(orderDetails);
+      const normalizedMessage = Object.keys(normalizedMessagePropsMap).reduce((normalized, prop) => {
+        const unormalizedProp = normalizedToUnormalizedPropsMap[prop];
+        if (flattenedOrderDetails[unormalizedProp]) {
+          normalized[prop] = flattenedOrderDetails[unormalizedProp];
+        }
+      });
+
+      return Object.assign(normalizedMessage, { id: orderId, info });
     });
   }
 }
