@@ -11,23 +11,10 @@ class OpenOrders extends Channel {
       const orderId = Object.keys(message)[0];
       const orderDetails = message[orderId];
 
-      const normalizedOrder = {
+      return {
         orderId,
-        status: orderDetails.status,
-      };
-
-      if (orderDetails.descr) {
-        // new order
-        return Object.assign(normalizedOrder, {
-          pair: orderDetails.descr.pair,
-          price: orderDetails.descr.price,
-          amount: orderDetails.vol,
-          side: orderDetails.descr.type,
-          type: orderDetails.descr.ordertype,
-          openTime: orderDetails.opentm,
-        });
+        ...orderDetails
       }
-      return normalizedOrder;
     });
   }
 }

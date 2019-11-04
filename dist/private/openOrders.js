@@ -4,6 +4,8 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 var _channel = require('./channel');
 
 var _channel2 = _interopRequireDefault(_channel);
@@ -22,23 +24,9 @@ class OpenOrders extends _channel2.default {
       const orderId = Object.keys(message)[0];
       const orderDetails = message[orderId];
 
-      const normalizedOrder = {
-        orderId,
-        status: orderDetails.status
-      };
-
-      if (orderDetails.descr) {
-        // new order
-        return Object.assign(normalizedOrder, {
-          pair: orderDetails.descr.pair,
-          price: orderDetails.descr.price,
-          amount: orderDetails.vol,
-          side: orderDetails.descr.type,
-          type: orderDetails.descr.ordertype,
-          openTime: orderDetails.opentm
-        });
-      }
-      return normalizedOrder;
+      return _extends({
+        orderId
+      }, orderDetails);
     });
   }
 }
