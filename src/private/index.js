@@ -126,10 +126,10 @@ class PrivateClient {
   }
 
   handleMessage(message) {
-    const [ [ msg ], channel] = message;
+    const [ msgs, channel] = message;
 
     if (this[channel]) {
-      this[channel].onMessageUpdate(msg);
+      this[channel].onMessageUpdate(msgs);
     }
   }
 }

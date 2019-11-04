@@ -20,8 +20,8 @@ class Channel {
     this.socket.send(JSON.stringify(subscribeMessage));
   }
 
-  onMessageUpdate(message) {
-    const data = this.normalizeMessage(message);
+  onMessageUpdate(messages) {
+    const data = this.normalizeMessages(messages);
     this.callback(data);
   }
 }
