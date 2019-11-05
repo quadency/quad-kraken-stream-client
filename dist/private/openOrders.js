@@ -53,7 +53,7 @@ class OpenOrders extends _channel2.default {
       }, orderDetails);
 
       const flattenedOrderDetails = this.flattenOrderDetails(orderDetails);
-      const normalizedMessage = Object.keys(normalizedMessagePropsMap).reduce((normalized, prop) => {
+      const normalizedMessage = Object.keys(normalizedToUnormalizedPropsMap).reduce((normalized, prop) => {
         const unormalizedProp = normalizedToUnormalizedPropsMap[prop];
         if (flattenedOrderDetails[unormalizedProp]) {
           normalized[prop] = flattenedOrderDetails[unormalizedProp];
