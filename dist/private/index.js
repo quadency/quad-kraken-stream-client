@@ -154,7 +154,7 @@ class PrivateClient {
     return _asyncToGenerator(function* () {
       _this2.authToken = yield _this2.getAuthToken();
       _this2.socket = yield _this2.initSocket();
-      _this2.balance = new _balances2.default(_this2.socket, _this2.authToken);
+      _this2.accountBalancesAndMargins = new _balances2.default(_this2.socket, _this2.authToken);
       _this2.openOrders = new _openOrders2.default(_this2.socket, _this2.authToken);
 
       _this2.pingInterval = PrivateClient.startPings(_this2.socket, _this2.options.msBetweenPings);

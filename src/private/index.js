@@ -119,7 +119,7 @@ class PrivateClient {
   async connect() {
     this.authToken = await this.getAuthToken();
     this.socket = await this.initSocket();
-    this.balance = new Balances(this.socket, this.authToken);
+    this.accountBalancesAndMargins = new Balances(this.socket, this.authToken);
     this.openOrders = new OpenOrders(this.socket, this.authToken);
 
     this.pingInterval = PrivateClient.startPings(this.socket, this.options.msBetweenPings);
