@@ -6,6 +6,7 @@ const normalizedToUnormalizedPropsMap = {
   type: 'ordertype',
   price: 'price',
   side: 'type',
+  status: 'status',
   stop_price: 'stopprice',
   amount: 'vol',
   filled: 'vol_exec',
