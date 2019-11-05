@@ -58,7 +58,8 @@ class OpenOrders extends _channel2.default {
         if (flattenedOrderDetails[unormalizedProp]) {
           normalized[prop] = flattenedOrderDetails[unormalizedProp];
         }
-      });
+        return normalized;
+      }, {});
 
       return Object.assign(normalizedMessage, { id: orderId, info });
     });
