@@ -133,7 +133,6 @@ class PrivateClient {
     this.socket.terminate();
     this.socket = null;
     this.authToken = null;
-    this.options = null;
   }
 
   handleMessage(message) {
