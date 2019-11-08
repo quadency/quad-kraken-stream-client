@@ -1,24 +1,13 @@
-'use strict';
+import Channel from './channel';
+import { CHANNELS } from './utils';
 
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _channel = require('./channel');
-
-var _channel2 = _interopRequireDefault(_channel);
-
-var _utils = require('./utils');
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-class Book extends _channel2.default {
+class Book extends Channel {
   constructor(socket) {
     const options = {
-      depth: 100
+      depth: 100,
     };
 
-    super(socket, _utils.CHANNELS.BOOK, options);
+    super(socket, CHANNELS.BOOK, options);
   }
 
   normalizeSnapshot(message) {
@@ -28,22 +17,22 @@ class Book extends _channel2.default {
       asks: [],
       bids: [],
       type: 'snapshot',
-      pair
+      pair,
     };
 
-    snapshot.as.forEach(ask => {
+    snapshot.as.forEach((ask) => {
       const normalizedAsk = {
         price: ask[0],
         volume: ask[1],
-        timestamp: ask[2]
+        timestamp: ask[2],
       };
       normalized.asks.push(normalizedAsk);
     });
-    snapshot.bs.forEach(bid => {
+    snapshot.bs.forEach((bid) => {
       const normalizedBid = {
         price: bid[0],
         volume: bid[1],
-        timestamp: bid[2]
+        timestamp: bid[2],
       };
       normalized.bids.push(normalizedBid);
     });
@@ -58,12 +47,10 @@ class Book extends _channel2.default {
     if (message.length === 5) {
       asks = message[1].a;
       bids = message[2].b;
+    } else if (message[1].a) {
+      asks = message[1].a;
     } else {
-      if (message[1].a) {
-        asks = message[1].a;
-      } else {
-        bids = message[1].b;
-      }
+      bids = message[1].b;
     }
 
     const pair = message.slice(-1)[0];
@@ -71,22 +58,22 @@ class Book extends _channel2.default {
       asks: [],
       bids: [],
       type: 'delta',
-      pair
+      pair,
     };
 
-    asks.forEach(ask => {
+    asks.forEach((ask) => {
       const normalizedAsk = {
         price: ask[0],
         volume: ask[1],
-        timestamp: ask[1]
+        timestamp: ask[1],
       };
       normalized.asks.push(normalizedAsk);
     });
-    bids.forEach(bid => {
+    bids.forEach((bid) => {
       const normalizedBid = {
         price: bid[0],
         volume: bid[1],
-        timestamp: bid[2]
+        timestamp: bid[2],
       };
       normalized.bids.push(normalizedBid);
     });
@@ -102,4 +89,4 @@ class Book extends _channel2.default {
   }
 }
 
-exports.default = Book;
+export default Book;
