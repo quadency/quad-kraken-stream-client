@@ -41,7 +41,7 @@ class PublicClient {
       const socket = new WebSocket(WEBSOCKET_URI);
 
       socket.onerror = (error) => {
-        console.log(`[correlationId=${this.correlationId}] ${EXCHANGE} connection error ${error}`);
+        console.log(`[correlationId=${this.correlationId}] ${EXCHANGE} connection error ${JSON.stringify(error)}`);
         if (this.onErrorCB) {
           this.onErrorCB();
         }
