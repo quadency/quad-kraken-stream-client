@@ -5,7 +5,7 @@
 import KrakenStreamClient from 'kraken-stream-client';
 
 async function main() {
-  const client = new KrakenStreamClient('EXAMPLE', { autoReconnect: true  });
+  const client = new KrakenStreamClient.public('EXAMPLE', { autoReconnect: true  });
   await client.connect();
   client.book.subscribe('XBT/USD', (msg) => console.log(msg));
 }
