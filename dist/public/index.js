@@ -70,7 +70,7 @@ class PublicClient {
       const socket = new _ws2.default(WEBSOCKET_URI);
 
       socket.onerror = error => {
-        console.log(`[correlationId=${this.correlationId}] ${EXCHANGE} connection error ${JSON.stringify(error)}`);
+        console.log(`[correlationId=${this.correlationId}] ${EXCHANGE} connection error ${error}`);
         if (this.onErrorCB) {
           this.onErrorCB();
         }
