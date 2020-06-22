@@ -44,13 +44,12 @@ class Book extends Channel {
     let asks = [];
     let bids = [];
 
-    if (message.length === 5) {
-      asks = message[1].a;
-      bids = message[2].b;
-    } else if (message[1].a) {
-      asks = message[1].a;
-    } else {
-      bids = message[1].b;
+    const [, deltas] = message;
+    if (deltas.a) {
+      asks = deltas.a;
+    }
+    if (deltas.b) {
+      bids = deltas.b;
     }
 
     const pair = message.slice(-1)[0];
@@ -65,7 +64,7 @@ class Book extends Channel {
       const normalizedAsk = {
         price: ask[0],
         volume: ask[1],
-        timestamp: ask[1],
+        timestamp: ask[2],
       };
       normalized.asks.push(normalizedAsk);
     });
@@ -82,7 +81,7 @@ class Book extends Channel {
   }
 
   normalizeMessage(message) {
-    if (Object.keys(message[1]).length === 2) {
+    if (message[1].as && message[1].bs) {
       return this.normalizeSnapshot(message);
     }
     return this.normalizeDeltas(message);
