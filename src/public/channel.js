@@ -8,6 +8,21 @@ class Channel {
     this.options = options;
   }
 
+  _subscribe(pairsToSubscribe) {
+    while (pairsToSubscribe.length) {
+      const pairsBatch = pairsToSubscribe.splice(0, 100);
+      const subscribeMessage = {
+        event: EVENTS.SUBSCRIBE,
+        pair: pairsBatch,
+        subscription: {
+          name: this.channelName,
+          ...this.options,
+        }
+      };
+      this.socket.send(JSON.stringify(subscribeMessage));
+    }
+  }
+
   subscribe(pairs, callback, resubscribe = false) {
     const pairsArray = Array.isArray(pairs) ? pairs : [pairs];
 
@@ -21,19 +36,10 @@ class Channel {
           this.pairListeners.set(pair, []);
         }
         this.pairListeners.get(pair).push(callback);
-      });
+      })
     }
 
-    const subscribeMessage = {
-      event: EVENTS.SUBSCRIBE,
-      pair: pairsToSubscribe,
-      subscription: {
-        name: this.channelName,
-        ...this.options,
-      },
-    };
-
-    this.socket.send(JSON.stringify(subscribeMessage));
+    this._subscribe(pairsToSubscribe);
   }
 
   setSocket(socket) {
