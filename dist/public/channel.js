@@ -30,9 +30,22 @@ class Channel {
     }
   }
 
+  _unSubscribe(pairsToUnSubscribe) {
+    while (pairsToUnSubscribe.length) {
+      const pairsBatch = pairsToUnSubscribe.splice(0, 100);
+      const unSubscribeMessage = {
+        event: _utils.EVENTS.UNSUBSCRIBE,
+        pair: pairsBatch,
+        subscription: _extends({
+          name: this.channelName
+        }, this.options)
+      };
+      this.socket.send(JSON.stringify(unSubscribeMessage));
+    }
+  }
+
   subscribe(pairs, callback, resubscribe = false) {
     const pairsArray = Array.isArray(pairs) ? pairs : [pairs];
-
     let pairsToSubscribe = [];
     if (resubscribe) {
       pairsToSubscribe = pairsArray;
@@ -47,6 +60,17 @@ class Channel {
     }
 
     this._subscribe(pairsToSubscribe);
+  }
+
+  unSubscribe(pairs) {
+    const pairsArray = Array.isArray(pairs) ? pairs : [pairs];
+    const toBeRemovedArray = [...pairsArray];
+    this._unSubscribe(pairsArray);
+    toBeRemovedArray.forEach(pair => {
+      if (this.pairListeners.has(pair)) {
+        this.pairListeners.delete(pair);
+      }
+    });
   }
 
   setSocket(socket) {
