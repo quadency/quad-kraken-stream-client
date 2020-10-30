@@ -10,6 +10,7 @@ class Balances extends Channel {
     super(socket, authToken, CHANNELS.BALANCES);
   }
 
+  /* eslint-disable-next-line class-methods-use-this */
   normalizeMessage(message) {
     return message;
   }

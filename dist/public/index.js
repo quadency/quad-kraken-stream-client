@@ -49,9 +49,11 @@ class PublicClient {
   onOpen(fn) {
     this.onOpenCB = fn;
   }
+
   onError(fn) {
     this.onErrorCB = fn;
   }
+
   onClose(fn) {
     this.onCloseCB = fn;
   }
@@ -66,7 +68,7 @@ class PublicClient {
   }
 
   initSocket() {
-    return new Promise((resolve, reject) => {
+    return new Promise(resolve => {
       const socket = new _ws2.default(WEBSOCKET_URI);
 
       socket.onerror = error => {

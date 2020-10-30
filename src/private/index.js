@@ -13,7 +13,7 @@ const defaultOptions = {
   apiKey: '',
   secretKey: '',
   autoReconnect: false,
-  msBetweenPings: 5000
+  msBetweenPings: 5000,
 };
 
 function createSignature(apiPath, secretKey, nonce) {
@@ -40,7 +40,9 @@ class PrivateClient {
   }
 
   setOnOpenHook(fn) { this.onOpenHook = fn; }
+
   setOnErrorHook(fn) { this.onErrorHook = fn; }
+
   setOnCloseHook(fn) { this.onCloseHook = fn; }
 
   static startPings(socket, interval) {
@@ -66,18 +68,18 @@ class PrivateClient {
         'API-Key': apiKey,
         'API-Sign': signature,
       },
-      data: `nonce=${nonce}`
+      data: `nonce=${nonce}`,
     };
 
     const res = await axios(options);
     if (res.data.error.length) {
       throw new Error(`Error getting auth token ${res.data.error}`);
     }
-    return res.data.result.token
+    return res.data.result.token;
   }
 
   initSocket() {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       const socket = new WebSocket(WEBSOCKET_URI);
 
       socket.onerror = (error) => {
@@ -136,7 +138,7 @@ class PrivateClient {
   }
 
   handleMessage(message) {
-    const [ msgs, channel] = message;
+    const [msgs, channel] = message;
 
     if (this[channel]) {
       this[channel].onMessageUpdate(msgs);

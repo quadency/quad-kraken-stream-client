@@ -26,7 +26,7 @@ class OpenOrders extends Channel {
 
     // ensure return copy
     return JSON.parse(JSON.stringify(orderDetails));
-  };
+  }
 
   normalizeMessages(messages) {
     return messages.map((message) => {
@@ -35,13 +35,14 @@ class OpenOrders extends Channel {
 
       const info = {
         id: orderId,
-        ...orderDetails
+        ...orderDetails,
       };
 
       const flattenedOrderDetails = this.flattenOrderDetails(orderDetails);
       const normalizedMessage = Object.keys(normalizedToUnormalizedPropsMap).reduce((normalized, prop) => {
         const unormalizedProp = normalizedToUnormalizedPropsMap[prop];
         if (flattenedOrderDetails[unormalizedProp]) {
+          /* eslint-disable-next-line no-param-reassign */
           normalized[prop] = flattenedOrderDetails[unormalizedProp];
         }
         return normalized;

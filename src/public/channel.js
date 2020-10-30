@@ -17,24 +17,24 @@ class Channel {
         subscription: {
           name: this.channelName,
           ...this.options,
-        }
+        },
       };
       this.socket.send(JSON.stringify(subscribeMessage));
     }
   }
 
-  _unSubscribe(pairsToUnSubscribe) {
-    while (pairsToUnSubscribe.length) {
-      const pairsBatch = pairsToUnSubscribe.splice(0, 100);
-      const unSubscribeMessage = {
+  _unsubscribe(pairsToUnsubscribe) {
+    while (pairsToUnsubscribe.length) {
+      const pairsBatch = pairsToUnsubscribe.splice(0, 100);
+      const unsubscribeMessage = {
         event: EVENTS.UNSUBSCRIBE,
         pair: pairsBatch,
         subscription: {
           name: this.channelName,
           ...this.options,
-        }
+        },
       };
-      this.socket.send(JSON.stringify(unSubscribeMessage));
+      this.socket.send(JSON.stringify(unsubscribeMessage));
     }
   }
 
@@ -51,17 +51,17 @@ class Channel {
           this.pairListeners.set(pair, []);
         }
         this.pairListeners.get(pair).push(callback);
-      })
+      });
     }
 
     this._subscribe(pairsToSubscribe);
   }
 
-  unSubscribe(pairs) {
+  unsubscribe(pairs) {
     const pairsArray = Array.isArray(pairs) ? pairs : [pairs];
     const toBeRemovedArray = [...pairsArray];
-    this._unSubscribe(pairsArray);
-    toBeRemovedArray.forEach(pair => {
+    this._unsubscribe(pairsArray);
+    toBeRemovedArray.forEach((pair) => {
       if (this.pairListeners.has(pair)) {
         this.pairListeners.delete(pair);
       }

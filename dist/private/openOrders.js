@@ -57,6 +57,7 @@ class OpenOrders extends _channel2.default {
       const normalizedMessage = Object.keys(normalizedToUnormalizedPropsMap).reduce((normalized, prop) => {
         const unormalizedProp = normalizedToUnormalizedPropsMap[prop];
         if (flattenedOrderDetails[unormalizedProp]) {
+          /* eslint-disable-next-line no-param-reassign */
           normalized[prop] = flattenedOrderDetails[unormalizedProp];
         }
         return normalized;

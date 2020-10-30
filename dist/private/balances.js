@@ -21,6 +21,7 @@ class Balances extends _channel2.default {
     super(socket, authToken, _utils.CHANNELS.BALANCES);
   }
 
+  /* eslint-disable-next-line class-methods-use-this */
   normalizeMessage(message) {
     return message;
   }
