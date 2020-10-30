@@ -7,7 +7,7 @@ const EVENTS = {
 
 const CHANNELS = {
   BALANCES: 'accountBalancesAndMargins',
-  ORDERS: 'openOrders'
+  ORDERS: 'openOrders',
 };
 
 export { EVENTS, CHANNELS };

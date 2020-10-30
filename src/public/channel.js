@@ -17,7 +17,7 @@ class Channel {
         subscription: {
           name: this.channelName,
           ...this.options,
-        }
+        },
       };
       this.socket.send(JSON.stringify(subscribeMessage));
     }
@@ -32,7 +32,7 @@ class Channel {
         subscription: {
           name: this.channelName,
           ...this.options,
-        }
+        },
       };
       this.socket.send(JSON.stringify(unsubscribeMessage));
     }
@@ -51,7 +51,7 @@ class Channel {
           this.pairListeners.set(pair, []);
         }
         this.pairListeners.get(pair).push(callback);
-      })
+      });
     }
 
     this._subscribe(pairsToSubscribe);
@@ -61,7 +61,7 @@ class Channel {
     const pairsArray = Array.isArray(pairs) ? pairs : [pairs];
     const toBeRemovedArray = [...pairsArray];
     this._unsubscribe(pairsArray);
-    toBeRemovedArray.forEach(pair => {
+    toBeRemovedArray.forEach((pair) => {
       if (this.pairListeners.has(pair)) {
         this.pairListeners.delete(pair);
       }

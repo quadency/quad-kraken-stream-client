@@ -11,8 +11,8 @@ const IGNORE_EVENTS = [EVENTS.PONG, EVENTS.HEARTBEAT, EVENTS.SYSTEM_STATUS, EVEN
 
 const defaultOptions = {
   msBetweenPings: 5000,
-  autoReconnect: false
-}
+  autoReconnect: false,
+};
 
 class PublicClient {
   constructor(correlationId, options) {
@@ -24,8 +24,10 @@ class PublicClient {
   }
 
   onOpen(fn) { this.onOpenCB = fn; }
+
   onError(fn) { this.onErrorCB = fn; }
-  onClose (fn) { this.onCloseCB = fn; }
+
+  onClose(fn) { this.onCloseCB = fn; }
 
   static startPings(socket, interval) {
     return setInterval(() => {
@@ -33,11 +35,11 @@ class PublicClient {
         event: EVENTS.PING,
       };
       socket.send(JSON.stringify(pingMessage));
-    }, interval)
+    }, interval);
   }
 
   initSocket() {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       const socket = new WebSocket(WEBSOCKET_URI);
 
       socket.onerror = (error) => {
@@ -65,7 +67,7 @@ class PublicClient {
           return;
         }
         this.handleMessage(message);
-      }
+      };
 
       socket.onopen = () => {
         console.log(`[correlationId=${this.correlationId}] ${EXCHANGE} connection open`);
@@ -73,7 +75,7 @@ class PublicClient {
           this.onOpenCB();
         }
         resolve(socket);
-      }
+      };
     });
   }
 

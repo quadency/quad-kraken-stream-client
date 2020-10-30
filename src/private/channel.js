@@ -29,8 +29,8 @@ class Channel {
       const unsubscribeMessage = {
         event: EVENTS.UNSUBSCRIBE,
         subscription: {
-          name: this.channelName
-        }
+          name: this.channelName,
+        },
       };
       this.socket.send(JSON.stringify(unsubscribeMessage));
       this.callback = null;

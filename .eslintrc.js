@@ -11,7 +11,7 @@ module.exports = {
   extends: ['airbnb'],
   plugins: [],
   parserOptions: {
-    ecmaVersion: 8,
+    ecmaVersion: 9,
     sourceType: 'module',
     ecmaFeatures: {},
   },
@@ -33,6 +33,8 @@ module.exports = {
     'no-plusplus': [OFF],
     'global-require': [OFF],
     'import/no-dynamic-require': [OFF],
-    'new-cap': ["error", { "properties": false }]
+    'new-cap': ["error", { "properties": false }],
+    'class-methods-use-this': [WARNING],
+    'no-underscore-dangle': [OFF],
   },
 };
