@@ -64,9 +64,11 @@ class PrivateClient {
   setOnOpenHook(fn) {
     this.onOpenHook = fn;
   }
+
   setOnErrorHook(fn) {
     this.onErrorHook = fn;
   }
+
   setOnCloseHook(fn) {
     this.onCloseHook = fn;
   }
@@ -109,7 +111,7 @@ class PrivateClient {
   }
 
   initSocket() {
-    return new Promise((resolve, reject) => {
+    return new Promise(resolve => {
       const socket = new _ws2.default(WEBSOCKET_URI);
 
       socket.onerror = error => {
