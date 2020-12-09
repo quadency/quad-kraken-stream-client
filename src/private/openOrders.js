@@ -21,7 +21,12 @@ class OpenOrders extends Channel {
   flattenOrderDetails(orderDetails) {
     if (orderDetails.descr) {
       const { descr, ...rest } = orderDetails;
-      return Object.assign(rest, { ...descr });
+      const priceObj = {};
+      if (descr && descr.ordertype && descr.ordertype === 'stop-loss-limit') {
+        priceObj.price = descr.price2;
+        priceObj.stopprice = descr.price;
+      }
+      return Object.assign(rest, { ...descr }, priceObj);
     }
 
     // ensure return copy
@@ -47,7 +52,6 @@ class OpenOrders extends Channel {
         }
         return normalized;
       }, {});
-
       return Object.assign(normalizedMessage, { id: orderId, info });
     });
   }
