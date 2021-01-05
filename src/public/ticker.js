@@ -9,10 +9,11 @@ class Ticker extends Channel {
   normalizeMessage(message) {
     const ticker = message[1];
     const pair = message.slice(-1)[0];
+    const price = ticker.c[0];
     return {
-      price: ticker.c[0],
+      price,
       price24Hr: ticker.p[1],
-      volume: ticker.v[0],
+      volume: ticker.v[1] * price,
       high: ticker.h[0],
       low: ticker.l[0],
       pair,
