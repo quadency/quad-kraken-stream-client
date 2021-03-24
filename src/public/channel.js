@@ -19,7 +19,9 @@ class Channel {
           ...this.options,
         },
       };
-      this.socket.send(JSON.stringify(subscribeMessage));
+      if (this.socket.readyState === this.socket.OPEN) {
+        this.socket.send(JSON.stringify(subscribeMessage));
+      }
     }
   }
 
