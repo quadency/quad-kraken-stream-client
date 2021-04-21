@@ -63,7 +63,9 @@ class PublicClient {
       const pingMessage = {
         event: _utils.EVENTS.PING
       };
-      socket.send(JSON.stringify(pingMessage));
+      if (socket && socket.readyState === socket.OPEN) {
+        socket.send(JSON.stringify(pingMessage));
+      }
     }, interval);
   }
 

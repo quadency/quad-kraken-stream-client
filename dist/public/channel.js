@@ -26,7 +26,9 @@ class Channel {
           name: this.channelName
         }, this.options)
       };
-      this.socket.send(JSON.stringify(subscribeMessage));
+      if (this.socket.readyState === this.socket.OPEN) {
+        this.socket.send(JSON.stringify(subscribeMessage));
+      }
     }
   }
 
@@ -40,7 +42,9 @@ class Channel {
           name: this.channelName
         }, this.options)
       };
-      this.socket.send(JSON.stringify(unsubscribeMessage));
+      if (this.socket.readyState === this.socket.OPEN) {
+        this.socket.send(JSON.stringify(unsubscribeMessage));
+      }
     }
   }
 
